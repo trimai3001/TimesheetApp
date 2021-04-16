@@ -1,29 +1,30 @@
-﻿@{
+﻿@model WorkingWeek
+@{
     ViewData["Title"] = "Timesheet";
 }
 
 <div class="container">
-    <div class="row">
-        <div class="d-grid gap-2 d-md-block">
-            <button class="btn btn-primary" type="button">Add Row</button>
-            <button class="btn btn-primary" type="button" asp-action="Save">Save</button>
-            <button class="btn btn-success" type="button">Submit</button>
+    <form method="post">
+        <div class="row">
+            <div class="d-grid gap-2 d-md-block">
+                <button class="btn btn-primary" type="button">Add Row</button>
+                <button class="btn btn-success" type="submit" asp-action="Submit">Submit</button>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-2"></div>
-        <div class="col-2"></div>
-        <div class="col-1 text-center">Monday</div>
-        <div class="col-1 text-center">Tuesday</div>
-        <div class="col-1 text-center">Wednesday</div>
-        <div class="col-1 text-center">Thursday</div>
-        <div class="col-1 text-center">Friday</div>
-        <div class="col-1 text-center">Saturday</div>
-        <div class="col-1 text-center">Sunday</div>
-    </div>
-    <div class="row">
-        <form>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-2"></div>
+            <div class="col-1 text-center">Monday</div>
+            <div class="col-1 text-center">Tuesday</div>
+            <div class="col-1 text-center">Wednesday</div>
+            <div class="col-1 text-center">Thursday</div>
+            <div class="col-1 text-center">Friday</div>
+            <div class="col-1 text-center">Saturday</div>
+            <div class="col-1 text-center">Sunday</div>
+        </div>
+        <div class="row">
+
             <div class="col-2">
                 <select class="form-select" aria-label="Select project">
                     <option value="1">Project 1</option>
@@ -38,28 +39,28 @@
                 </select>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="monday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="monday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="tuesday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="tuesday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="wednesday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="wednesday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="thursday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="thursday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="friday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="friday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="saturday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="saturday"/>
             </div>
             <div class="col-1">
-                <input class="text-center input-working-day" name="sunday" placeholder="0" />
+                <input class="text-center input-working-day" value="" type="number" name="sunday"/>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 

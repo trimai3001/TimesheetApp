@@ -20,6 +20,8 @@ namespace TimesheetApp.Controllers
 
         public IActionResult Index()
         {
+            var workingWeek = new WorkingWeek();
+          
             return View();
         }
 
