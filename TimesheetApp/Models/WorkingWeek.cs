@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +9,10 @@ namespace TimesheetApp.Models
 {
     public class WorkingWeek
     {
-        public string Id { get; set; }
-        public Employee Employee { get; set; }
+        public ObjectId Id { get; set; }
+        public string EmployeeId { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public List<WorkingDay> WorkingDays { get; set; }
     }
 }

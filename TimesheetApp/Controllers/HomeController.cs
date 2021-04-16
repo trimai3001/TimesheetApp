@@ -5,24 +5,33 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Interfaces;
 using TimesheetApp.Models;
+using TimesheetApp.ViewModels;
 
 namespace TimesheetApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //private readonly IWorkingWeekRepository _workingWeekRepository;
+        private readonly IBillingCategoryRepository _billingCategory;
+        private readonly IProjectRepository _project;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository)
         {
-            _logger = logger;
+            _billingCategory = billingCategoryRepository;
+            _project = projectRepository;
         }
-
         public IActionResult Index()
         {
-            var workingWeek = new WorkingWeek();
-          
-            return View();
+            var homeViewModel = new HomeViewModel
+            {
+                BillingCategories = _billingCategory.Get(),
+                Projects = _project.Get()
+            };
+
+            return View(homeViewModel);
         }
 
         public IActionResult Privacy()
@@ -30,7 +39,7 @@ namespace TimesheetApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Save(int id)
+        public IActionResult Submit(WorkingWeek workingWeek)
         {
             
             return View();

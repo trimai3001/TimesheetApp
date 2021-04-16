@@ -1,7 +1,4 @@
-﻿@model WorkingWeek
-@{
-    ViewData["Title"] = "Timesheet";
-}
+﻿@model TimesheetApp.ViewModels.HomeViewModel
 
 <div class="container">
     <form method="post">
@@ -27,15 +24,18 @@
 
             <div class="col-2">
                 <select class="form-select" aria-label="Select project">
-                    <option value="1">Project 1</option>
-                    <option value="2">Project 2</option>
-                    <option value="3">Project 3</option>
+                    @foreach (var project in Model.Projects)
+                    {
+                        <option value="@project.Id">@project.Name</option>
+                    }
                 </select>
             </div>
             <div class="col-2">
                 <select class="form-select" aria-label="Select billing">
-                    <option value="1">Bill</option>
-                    <option value="2">Non-bill</option>
+                    @foreach (var billing in Model.BillingCategories)
+                    {
+                        <option model="billing" value="@billing.Id">@billing.Name</option>
+                    }
                 </select>
             </div>
             <div class="col-1">

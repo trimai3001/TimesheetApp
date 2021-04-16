@@ -4,10 +4,14 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Database;
+using TimesheetApp.Interfaces;
+using TimesheetApp.Repositories;
 
 namespace TimesheetApp
 {
@@ -23,7 +27,14 @@ namespace TimesheetApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
+
             services.AddControllersWithViews();
+
+            services.AddMvc();
+            services.AddTransient<IWorkingWeekRepository, WorkingWeekRepository>();
+            services.AddTransient<IBillingCategoryRepository, BillingCategoryRepository>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

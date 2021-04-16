@@ -9,10 +9,7 @@ namespace TimeSheetApp.Models
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Generator { get; set; }
-
-        [BsonElement("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }
