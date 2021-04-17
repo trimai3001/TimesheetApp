@@ -35,6 +35,7 @@ namespace TimesheetApp
             services.AddTransient<IWorkingWeekRepository, WorkingWeekRepository>();
             services.AddTransient<IBillingCategoryRepository, BillingCategoryRepository>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IWorkingDayRepository, WorkingDayRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

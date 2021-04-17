@@ -1,5 +1,6 @@
 {
   "dbName": "Timesheet",
   "billingCategoryCollection": "Billing Category",
-  "projectCollection":  "Project"
+  "projectCollection": "Project",
+  "workingDayCollection": "Working Day"
 }

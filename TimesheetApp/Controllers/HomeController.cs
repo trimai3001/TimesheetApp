@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimesheetApp.Models;
 using TimesheetApp.ViewModels;
@@ -16,19 +17,23 @@ namespace TimesheetApp.Controllers
         //private readonly IWorkingWeekRepository _workingWeekRepository;
         private readonly IBillingCategoryRepository _billingCategory;
         private readonly IProjectRepository _project;
+        private readonly IWorkingDayRepository _workingDay;
 
-
-        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository)
+        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IWorkingDayRepository workingDayRepository)
         {
             _billingCategory = billingCategoryRepository;
             _project = projectRepository;
+            _workingDay = workingDayRepository;
         }
         public IActionResult Index()
         {
             var homeViewModel = new HomeViewModel
             {
                 BillingCategories = _billingCategory.Get(),
-                Projects = _project.Get()
+                Projects = _project.Get(),
+                WorkingDays = _workingDay.LoadCurrentWeek(),
+                DateName = Utilities.GetDaysName(),
+                SimpleDate = Utilities.GetSimpleDate(Utilities.GetDaysOfCurrentWeek()),
             };
 
             return View(homeViewModel);
@@ -42,6 +47,12 @@ namespace TimesheetApp.Controllers
         public IActionResult Submit(WorkingWeek workingWeek)
         {
             
+            return View();
+        }
+
+        public IActionResult AddRow(WorkingWeek workingWeek)
+        {
+
             return View();
         }
 

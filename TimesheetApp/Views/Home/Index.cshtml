@@ -4,7 +4,7 @@
     <form method="post">
         <div class="row">
             <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="button">Add Row</button>
+                <button class="btn btn-primary" type="button" asp-action="AddRow">Add Row</button>
                 <button class="btn btn-success" type="submit" asp-action="Submit">Submit</button>
             </div>
         </div>
@@ -12,16 +12,15 @@
         <div class="row">
             <div class="col-2"></div>
             <div class="col-2"></div>
-            <div class="col-1 text-center">Monday</div>
-            <div class="col-1 text-center">Tuesday</div>
-            <div class="col-1 text-center">Wednesday</div>
-            <div class="col-1 text-center">Thursday</div>
-            <div class="col-1 text-center">Friday</div>
-            <div class="col-1 text-center">Saturday</div>
-            <div class="col-1 text-center">Sunday</div>
+            @for (var i = 0; i < Model.DateName.Count(); i++)
+            {
+                <div class="col-1 text-center">
+                    <h5>@Model.DateName.ElementAt(i)</h5>
+                    <h5>(@Model.SimpleDate.ElementAt(i))</h5>
+                </div>
+            }
         </div>
         <div class="row">
-
             <div class="col-2">
                 <select class="form-select" aria-label="Select project">
                     @foreach (var project in Model.Projects)
@@ -38,27 +37,12 @@
                     }
                 </select>
             </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="monday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="tuesday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="wednesday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="thursday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="friday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="saturday"/>
-            </div>
-            <div class="col-1">
-                <input class="text-center input-working-day" value="" type="number" name="sunday"/>
-            </div>
+            @foreach (var workingDay in Model.WorkingDays)
+            {
+                <div class="col-1">
+                    <input class="text-center input-working-day" value="@workingDay.WorkHour" type="number" name="monday" />
+                </div>
+            }
         </div>
     </form>
 </div>

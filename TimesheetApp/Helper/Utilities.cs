@@ -49,5 +49,53 @@ namespace TimesheetApp.Helper
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        public static DateTime GetMonday(DateTime time)
+        {
+            if (time.DayOfWeek != DayOfWeek.Monday)
+                return time.Subtract(new TimeSpan((int)time.DayOfWeek - 1, 0, 0, 0));
+
+            return time;
+        }
+
+        public static IEnumerable<DateTime> GetDaysOfCurrentWeek()
+        {
+            var daysOfCurrentWeek = new List<DateTime>();
+            var currentDate = DateTime.Today;
+            var monday = GetMonday(currentDate);
+
+            for (var i = 0; i < 7; i++)
+            {
+                daysOfCurrentWeek.Add(monday);
+                monday = monday.AddDays(1);
+            }
+
+            return daysOfCurrentWeek;
+        }
+
+        public static IEnumerable<string> GetDaysName()
+        {
+            var names = new List<string> { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+            return names;
+        }
+
+        public static IEnumerable<string> GetSimpleDate(IEnumerable<DateTime> dates)
+        {
+            var simpleDate = new List<string>();
+            for(var i = 0; i < dates.Count(); i++)
+            {
+                var day = dates.ElementAt(i).Day;
+                var month = dates.ElementAt(i).Month;
+                
+                var dayString = day < 10 ? ("0" + day.ToString()) : day.ToString();
+                var monthString = month < 10 ? ("0" + month.ToString()) : month.ToString();
+
+                var date = string.Format("{0}/{1}", monthString, dayString);
+                simpleDate.Add(date);
+            }
+
+            return simpleDate;
+        }
     }
 }
