@@ -9,7 +9,7 @@ using TimeSheetApp.Models;
 
 namespace TimesheetApp.Repositories
 {
-    public class ProjectRepository: BaseRepository ,IProjectRepository
+    public class ProjectRepository: BaseRepository, IProjectRepository
     {
         private readonly IMongoCollection<Project> _project;
         public ProjectRepository(IMongoClient client) : base(client)
@@ -18,7 +18,7 @@ namespace TimesheetApp.Repositories
 
             _project = collection;
         }
-        public IEnumerable<Project> Get()
+        public IEnumerable<Project> LoadAll()
         {
             var project = _project.Find(_ => true).ToList();
             return project;

@@ -1,132 +1,62 @@
 ﻿@model TimesheetApp.ViewModels.HomeViewModel
 
-<div class="container">
-    <form method="post">
-        <div class="row">
-            <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="button" asp-action="AddRow">Add Row</button>
-                <button class="btn btn-success" type="submit" asp-action="Submit">Submit</button>
-            </div>
+<form method="post" style="width: 100%">
+    <div class="row">
+        <div class="d-grid gap-2 d-md-block">
+            <button class="btn btn-primary" type="button" asp-action="AddRow">Add Row</button>
+            <button class="btn btn-success" type="submit" asp-action="Submit">Submit</button>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            @for (var i = 0; i < Model.DateName.Count(); i++)
-            {
-                <div class="col-1 text-center">
-                    <h5>@Model.DateName.ElementAt(i)</h5>
-                    <h5>(@Model.SimpleDate.ElementAt(i))</h5>
-                </div>
-            }
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <select class="form-select" aria-label="Select project">
-                    @foreach (var project in Model.Projects)
-                    {
-                        <option value="@project.Id">@project.Name</option>
-                    }
-                </select>
+    <div class="row">
+
+    </div>
+
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-1"></div>
+        <div class="col-2"></div>
+        @for (var i = 0; i < Model.DateName.Count(); i++)
+        {
+            <div class="col-1 text-center">
+                <h5>@Model.DateName.ElementAt(i)</h5>
+                <h5>(@Model.SimpleDate.ElementAt(i))</h5>
             </div>
-            <div class="col-2">
-                <select class="form-select" aria-label="Select billing">
-                    @foreach (var billing in Model.BillingCategories)
-                    {
-                        <option model="billing" value="@billing.Id">@billing.Name</option>
-                    }
-                </select>
-            </div>
-            @foreach (var workingDay in Model.WorkingDays)
-            {
-                <div class="col-1">
-                    <input class="text-center input-working-day" value="@workingDay.WorkHour" type="number" name="monday" />
-                </div>
-            }
+        }
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <select class="form-select" aria-label="Select project">
+                <option>Select Project</option>
+                @foreach (var project in Model.Projects)
+                {
+                    <option value="@project.Id">@project.Name</option>
+                }
+            </select>
         </div>
-    </form>
-</div>
-
-
-@*<table class="table table-striped table-bordered w-auto table-responsive">
-    <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col">Monday</th>
-            <th scope="col">Tuesday</th>
-            <th scope="col">Wednesday</th>
-            <th scope="col">Thursday</th>
-            <th scope="col">Friday</th>
-            <th scope="col">Saturday</th>
-            <th scope="col">Sunday</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th scope="row">
-                <input name="project" placeholder="Project"/>
-            </th>
-            <td style="max-width: 40px">
-                <input name="billing" placeholder="Billing Category" />
-            </td>
-            <td>
-                <input name="activity" placeholder="Activity" />
-            </td>
-            <td>
-                <input name="monday" placeholder="0" />
-            </td>
-            <td>
-                <input name="tuesday" placeholder="0" />
-            </td>
-            <td>
-                <input name="wednesday" placeholder="0" />
-            </td>
-            <td>
-                <input name="thursday" placeholder="0" />
-            </td>
-            <td>
-                <input name="friday" placeholder="0" />
-            </td>
-            <td>
-                <input name="saturday" placeholder="0" />
-            </td>
-            <td>
-                <input name="sunday" placeholder="0" />
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">
-                <input name="project" placeholder="Project" />
-            </th>
-            <td>
-                <input name="billing" placeholder="Billing Category" />
-            </td>
-            <td>
-                <input name="activity" placeholder="Activity" />
-            </td>
-            <td>
-                <input name="monday" placeholder="0" />
-            </td>
-            <td>
-                <input name="tuesday" placeholder="0" />
-            </td>
-            <td>
-                <input name="wednesday" placeholder="0" />
-            </td>
-            <td>
-                <input name="thursday" placeholder="0" />
-            </td>
-            <td>
-                <input name="friday" placeholder="0" />
-            </td>
-            <td>
-                <input name="saturday" placeholder="0" />
-            </td>
-            <td>
-                <input name="sunday" placeholder="0" />
-            </td>
-        </tr>
-    </tbody>
-</table>*@
+        <div class="col-1">
+            <select class="form-select" aria-label="Select billing">
+                <option>Select Bill</option>
+                @foreach (var billing in Model.BillingCategories)
+                {
+                    <option model="billing" value="@billing.Id">@billing.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-2">
+            <select class="form-select" aria-label="Select billing">
+                <option>Select Activity</option>
+                @foreach (var activity in Model.Activities)
+                {
+                    <option model="billing" value="@activity.Id">@activity.Name</option>
+                }
+            </select>
+        </div>
+        @foreach (var workingDay in Model.WorkingDays)
+        {
+            <div class="col-1">
+                <input class="text-center input-working-day" value="@workingDay.WorkHour" name="monday" />
+            </div>
+        }
+    </div>
+</form>

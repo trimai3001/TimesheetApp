@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,34 @@ namespace TimesheetApp.Repositories
             {
                 var list = workingDaysLoaded.ToList();
                 var workDay = new WorkingDay();
+
+                var find = list.Find(d => d.WorkDate == day);
+
+                if (find == null)
+                {
+                    workDay.WorkDate = day;
+                }
+                else
+                {
+                    workDay = find;
+                }
+
+                workingDaysOfCurrentWeek.Add(workDay);
+            });
+
+            return workingDaysOfCurrentWeek;
+        }
+
+        public IEnumerable<WorkingDay> LoadCurrentWeekByEmployeeId(ObjectId employeeId)
+        {
+            var workingDaysLoaded = LoadAll();
+            var dayOfCurrentWeek = Utilities.GetDaysOfCurrentWeek();
+            var workingDaysOfCurrentWeek = new List<WorkingDay>();
+
+            dayOfCurrentWeek.ToList().ForEach(day =>
+            {
+                var list = workingDaysLoaded.ToList();
+                var workDay = new WorkingDay(employeeId);
 
                 var find = list.Find(d => d.WorkDate == day);
 

@@ -8,6 +8,6 @@ namespace TimesheetApp.Interfaces
 {
     public interface IProjectRepository
     {
-        public IEnumerable<Project> Get();
+        public IEnumerable<Project> LoadAll();
     }
 }

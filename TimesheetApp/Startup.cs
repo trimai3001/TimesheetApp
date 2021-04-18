@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TimesheetApp.Database;
 using TimesheetApp.Interfaces;
 using TimesheetApp.Repositories;
 
@@ -35,7 +29,10 @@ namespace TimesheetApp
             services.AddTransient<IWorkingWeekRepository, WorkingWeekRepository>();
             services.AddTransient<IBillingCategoryRepository, BillingCategoryRepository>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<IActivityRepository, ActivityRepository>();
             services.AddTransient<IWorkingDayRepository, WorkingDayRepository>();
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

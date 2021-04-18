@@ -6,8 +6,9 @@ using TimeSheetApp.Models;
 
 namespace TimesheetApp.Interfaces
 {
-    public interface IBillingCategoryRepository
+    public interface IEmployeeRepository
     {
-        public IEnumerable<BillingCategory> LoadAll();
+        public IEnumerable<Employee> LoadAll();
+        public void CreateEmployee(Employee employee);
     }
 }

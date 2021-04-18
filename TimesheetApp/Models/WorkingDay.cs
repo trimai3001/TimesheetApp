@@ -11,19 +11,24 @@ namespace TimesheetApp.Models
 {
     public class WorkingDay
     {
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        [BsonElement("_id")]
+        public ObjectId Id { get; set; }
         [BsonElement("workDate")]
         public DateTime WorkDate { get; set; }
         [BsonElement("workHour")]
         public int WorkHour { get; set; }
+        [BsonElement("employeeId")]
+        public ObjectId EmployeeId { get; set; }
+        public WorkingDay(ObjectId employeeId)
+        {
+            Id = ObjectId.GenerateNewId();
+            WorkDate = new DateTime();
+            WorkHour = 0;
+            EmployeeId = employeeId;
+        }
 
         public WorkingDay()
         {
-            Id = "";
-            WorkDate = new DateTime();
-            WorkHour = 0;
         }
     }
 }

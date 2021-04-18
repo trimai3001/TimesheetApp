@@ -12,8 +12,10 @@ namespace TimesheetApp.ViewModels
         public IEnumerable<BillingCategory> BillingCategories { get; set; }
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<WorkingDay> WorkingDays { get; set; }
+        public IEnumerable<Activity> Activities { get; set; }
         public IEnumerable<string> DateName { get; set; }
         public IEnumerable<string> SimpleDate { get; set; }
+        public IEnumerable<WorkingWeek> WorkingWeeks { get; set;} 
         public HomeViewModel()
         {
 
