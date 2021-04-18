@@ -6,8 +6,8 @@ using TimeSheetApp.Models;
 
 namespace TimesheetApp.Interfaces
 {
-    public interface IBillingCategoryRepository
+    public interface IActivityRepository
     {
-        public IEnumerable<BillingCategory> LoadAll();
+        public IEnumerable<Activity> LoadAll();
     }
 }

@@ -12,12 +12,40 @@ namespace TimesheetApp.Repositories
 {
     public class WorkingWeekRepository : IWorkingWeekRepository
     {
-        private readonly IMongoCollection<WorkingWeek> _workingWeek;
+        private readonly IMongoCollection<WorkingWeek> _workingWeeks;
 
-        public IEnumerable<WorkingWeek> Get()
+        public IEnumerable<WorkingWeek> LoadAll()
         {
-            var workingWeek = _workingWeek.Find(_ => true).ToList();
+            var workingWeek = _workingWeeks.Find(_ => true).ToList();
             return workingWeek;
         }
+
+        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrent()
+        {
+            var monday = Utilities.GetMonday(DateTime.Today);
+            var workingWeeks = _workingWeeks.Find(w => w.From == monday).ToList();
+
+            if(workingWeeks.Count() == 0)
+            {
+                var workingWeek = new WorkingWeek();
+            }
+
+            return workingWeeks;
+        }
+
+        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrentByEmployeeId(ObjectId employeeId)
+        {
+            var monday = Utilities.GetMonday(DateTime.Today);
+            var workingWeeks = _workingWeeks.Find(w => w.From == monday && w.Employee.Id == employeeId).ToList();
+
+            if (workingWeeks.Count() == 0)
+            {
+                var workingWeek = new WorkingWeek();
+            }
+
+            return workingWeeks;
+        }
+
+        
     }
 }

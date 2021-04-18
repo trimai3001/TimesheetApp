@@ -18,20 +18,23 @@ namespace TimesheetApp.Controllers
         private readonly IBillingCategoryRepository _billingCategory;
         private readonly IProjectRepository _project;
         private readonly IWorkingDayRepository _workingDay;
+        private readonly IActivityRepository _activity;
 
-        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IWorkingDayRepository workingDayRepository)
+        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IWorkingDayRepository workingDayRepository, IActivityRepository activityRepository)
         {
             _billingCategory = billingCategoryRepository;
             _project = projectRepository;
             _workingDay = workingDayRepository;
+            _activity = activityRepository;
         }
         public IActionResult Index()
         {
             var homeViewModel = new HomeViewModel
             {
-                BillingCategories = _billingCategory.Get(),
-                Projects = _project.Get(),
+                BillingCategories = _billingCategory.LoadAll(),
+                Projects = _project.LoadAll(),
                 WorkingDays = _workingDay.LoadCurrentWeek(),
+                Activities = _activity.LoadAll(),
                 DateName = Utilities.GetDaysName(),
                 SimpleDate = Utilities.GetSimpleDate(Utilities.GetDaysOfCurrentWeek()),
             };

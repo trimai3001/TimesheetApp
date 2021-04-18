@@ -2,5 +2,8 @@
   "dbName": "Timesheet",
   "billingCategoryCollection": "Billing Category",
   "projectCollection": "Project",
-  "workingDayCollection": "Working Day"
+  "workingDayCollection": "Working Day",
+  "activityCollection": "Activity",
+  "employeeCollection": "Employee",
+  "roleCollection": "Role"
 }

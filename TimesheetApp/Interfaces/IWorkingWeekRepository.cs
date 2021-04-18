@@ -9,6 +9,7 @@ namespace TimesheetApp.Interfaces
 {
     interface IWorkingWeekRepository
     {
-        IEnumerable<WorkingWeek> Get();
+        public IEnumerable<WorkingWeek> LoadAll();
+        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrent();
     }
 }
