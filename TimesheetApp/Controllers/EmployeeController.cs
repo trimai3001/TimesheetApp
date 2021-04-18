@@ -37,6 +37,7 @@ namespace TimesheetApp.Controllers
         {
             ViewBag.Roles = _roleRepository.LoadAll();
             ViewBag.AllEmployee = _employeeRepository.LoadAll();
+            ViewBag._employee = _employeeRepository;
             return View();
         }
 
@@ -49,7 +50,6 @@ namespace TimesheetApp.Controllers
             {
                 ViewBag.Roles = _roleRepository.LoadAll();
                 ViewBag.AllEmployee = _employeeRepository.LoadAll();
-
                 ObjectId roleId = ObjectId.Parse(form["role"].ToString());
 
                 employee.Role = _roleRepository.GetRoleById(roleId);
@@ -72,7 +72,7 @@ namespace TimesheetApp.Controllers
         // POST: EmployeeController1/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(ObjectId id, IFormCollection collection)
         {
             try
             {
@@ -85,24 +85,26 @@ namespace TimesheetApp.Controllers
         }
 
         // GET: EmployeeController1/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete()
         {
-            return View();
+            return RedirectToAction(nameof(Create));
         }
 
         // POST: EmployeeController1/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                ObjectId id = ObjectId.Parse(form["EmployeeId"].ToString());
+                _employeeRepository.DeleteEmployee(id);
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+          
             }
+            return RedirectToAction(nameof(Create));
         }
     }
 }

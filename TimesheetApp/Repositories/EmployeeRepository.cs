@@ -1,8 +1,7 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TimesheetApp.Interfaces;
 using TimeSheetApp.Models;
 
@@ -33,6 +32,17 @@ namespace TimesheetApp.Repositories
             {
 
             }
+        }
+
+        public void DeleteEmployee(int employeeId) {
+            var filter = Builders<Employee>.Filter.Eq("EmployeeId", employeeId);
+            _employee.DeleteOne(filter);
+        }
+
+        public void DeleteEmployee(ObjectId id)
+        {
+            var filter = Builders<Employee>.Filter.Eq("Id", id);
+            _employee.DeleteOne(filter);
         }
     }
 }
