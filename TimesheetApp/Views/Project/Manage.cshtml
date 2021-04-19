@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Manager" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.Manager, new SelectList(ViewBag.Manager, "Id", "Name"), "Select Manager", new { @class = "form-select", @name = "employee" })
+                        @Html.DropDownListFor(model => model.Manager, new SelectList(ViewBag.Manager, "Id", "Name"), "Select Manager", new { @class = "form-select", @name = "manager" })
                         <span asp-validation-for="Manager" class="text-danger"></span>
                     </div>
 
@@ -45,12 +45,12 @@
                             @foreach (var project in ViewBag.AllProject)
                             {
                                 <tr>
-                                    <td><p>@project.Name</p></td>
-                                    <td><p>@project.Manager.Name</p></td>
+                                    <td style="text-align:center"><p class="text-center">@project.Name</p></td>
+                                    <td style="text-align:center"><p>@project.Manager.Name</p></td>
                                     <td style="text-align:center">
                                         <form asp-action="Delete">
                                             <div class="btn-group" role="group">
-                                                <button class="btn btn-danger" type="submit" value="Delete">
+                                                <button class="btn btn-link" type="submit" value="Delete">
                                                     <span style="color: white">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />

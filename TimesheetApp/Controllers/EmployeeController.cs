@@ -23,6 +23,7 @@ namespace TimesheetApp.Controllers
             _employeeRepository = employeeRepository;
             _roleRepository = roleRepository;
             employeeIdGenerate = _employeeRepository.GenerateEmployeeId();
+            
             employee = new Employee
             {
                 EmployeeId = employeeIdGenerate
@@ -36,7 +37,7 @@ namespace TimesheetApp.Controllers
         {
             try
             {
-                ObjectId roleId = ObjectId.Parse(form["role"].ToString());
+                ObjectId roleId = ObjectId.Parse(form["Role"].ToString());
                 employee.Role = _roleRepository.GetRoleById(roleId);
                 employee.EmployeeId = employeeIdGenerate;
                 _employeeRepository.CreateEmployee(employee);
@@ -45,7 +46,7 @@ namespace TimesheetApp.Controllers
             catch
             {
             }
-            return RedirectToAction(nameof(Manage));
+            return View(nameof(Manage));
         }
 
         // POST: EmployeeController/Delete/5
@@ -61,13 +62,13 @@ namespace TimesheetApp.Controllers
             catch (Exception e)
             {
             }
-            return RedirectToAction(nameof(Manage));
+            return View(nameof(Manage));
         }
 
         public ActionResult Manage()
         {
             ViewBag.Roles = _roleRepository.LoadAll();
-            ViewBag.AllEmployee = _employeeRepository.LoadAll();
+            ViewBag.AllEmployee = _employeeRepository.LoadAll();            
             return View(employee);
         }
     }

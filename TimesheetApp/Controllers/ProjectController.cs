@@ -36,7 +36,7 @@ namespace TimesheetApp.Controllers
         {
             try
             {
-                ObjectId id = ObjectId.Parse(form["employee"].ToString());
+                ObjectId id = ObjectId.Parse(form["Manager"].ToString());
                 project.Manager = _employeeRepository.GetByObjectId(id);
                 _projectRepository.Create(project);
                 ModelState.Clear();

@@ -1,162 +1,98 @@
 ﻿@model TimeSheetApp.Models.Employee
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
+}
 
-<h4>Employee</h4>
 <hr />
 
-@*<div class="row">
-    <div class="col-md-1"></div>
-    <div class="col-md-2">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EmployeeId" class="control-label">Id</label>
-                <input asp-for="EmployeeId" class="form-control" disabled value="@Model.EmployeeId" />
-                <span asp-validation-for="EmployeeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Role, new SelectList(ViewBag.Roles, "Id", "Name"), "Select Role", new { @class = "form-select", @name = "role" })
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" id="create" />
-            </div>
-        </form>
-    </div>
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <table class="table table-hover" id="table" data-toggle="table" data-height="560">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col" class="col-1" data-field="EmployeeId" data-sortable="true">#</th>
-                    <th scope="col" class="col-2" data-field="Name" data-sortable="true">Name</th>
-                    <th scope="col" class="col-2" data-field="Email" data-sortable="true">Email</th>
-                    <th scope="col" class="col-1" data-field="Role.Name" data-sortable="true">Role</th>
-                    <th scope="col" class="col-1"</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var employee in ViewBag.AllEmployee)
-                {
-                    <tr>
-                        <th scope="row">@employee.EmployeeId</th>
-                        <td>@employee.Name</td>
-                        <td>@employee.Email</td>
-                        <td>@employee.Role.Name</td>
-                        <td style="text-align:center">
-                            <form asp-action="Delete">
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-danger" type="submit" value="Delete">
-                                        <span style="color: white">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                    <input type="hidden" asp-for="EmployeeId" class="form-control" value="@employee.Id" />
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>*@
-<section class="py-5" style="width:100%;height:100%; border-radius: 0px" id="contact">
-    <div class="pt-3" style="width:80%; margin-left:10%; margin-right: 10%">
-        <div class="middle-heading1 text-center mb-5">
-            <h3>employee</h3>
-        </div>
-        <div class="row agileinfo_mail_grids">
-            <div class="col-md-5 agileinfo_mail_grid_right">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="EmployeeId" class="control-label">Id</label>
-                        <input asp-for="EmployeeId" class="form-control" disabled value="@Model.EmployeeId"/>
-                        <span asp-validation-for="EmployeeId" class="border-danger"></span>
+<div id="page-wrapper">
+    <div class="graphs">
+        <h3 class="blank1">Employee Form</h3>
+        <div class="panel-body panel-body-inputin">
+            <form class="form-horizontal" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Name" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="Name" type="text" class="form-control1">
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
+                    <div class="col-md-4">
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label"></label>
-                        <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Email" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="Email" class="form-control1" />
+                    </div>
+                    <div class="col-md-4">
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Role" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.Role, new SelectList(ViewBag.Roles, "Id", "Name"), "Select Role", new { @class = "form-select", @name = "role" })
+                </div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Role" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.Role, new SelectList(ViewBag.Roles, "Id", "Name"), "Select Role", new { @class = "form-select form-control1", @name = "Role" })
+                    </div>
+                    <div class="col-md-4">
                         <span asp-validation-for="Role" class="text-danger"></span>
                     </div>
-
-                    <div class="submit-buttons">
-                        <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" id="create" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-1 agileinfo_mail_grid_right">
-            </div>
-            <div class="col-md-6 mt-lg-0 mt-4 py-lg-3 py-4 px-0 contact-info">
-                <div class="contact-info1">
-                    <table class="table table-hover" id="table" data-toggle="table" data-height="300">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col" class="col-1" data-field="EmployeeId" data-sortable="true">#</th>
-                                <th scope="col" class="col-2" data-field="Name" data-sortable="true">Name</th>
-                                <th scope="col" class="col-2" data-field="Email" data-sortable="true">Email</th>
-                                <th scope="col" class="col-1" data-field="Role.Name" data-sortable="true">Role</th>
-                                <th scope="col" class="col-1"</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var employee in ViewBag.AllEmployee)
-                            {
-                                <tr>
-                                    <th scope="row"><p>@employee.EmployeeId</p></th>
-                                    <td><p>@employee.Name</p></td>
-                                    <td><p>@employee.Email</p></td>
-                                    <td><p>@employee.Role.Name</p></td>
-                                    <td style="text-align:center">
-                                        <form asp-action="Delete">
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-danger" type="submit" value="Delete">
-                                                    <span style="color: white">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                                        </svg>
-                                                    </span>
-                                                </button>
-                                                <input type="hidden" asp-for="EmployeeId" class="form-control" value="@employee.Id" />
-                                            </div>
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
                 </div>
+                <div class="form-group">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <input type="submit" value="Create" class="btn btn-success" id="create" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <h3 class="blank1">Basic Tables</h3>
+        <div class="xs tabls">
+            <div class="bs-example4" data-example-id="contextual-table">
+                <table class="table table-striped" data-toggle="table" data-height="500">
+                    <thead>
+                        <tr>
+                            <th data-field="EmployeeId" data-sortable="true">#</th>
+                            <th data-field="Name" data-sortable="true">Name</th>
+                            <th data-field="Email" data-sortable="true">Email</th>
+                            <th data-field="Role.Name" data-sortable="true">Role</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in ViewBag.AllEmployee)
+                        {
+                            <tr>
+                                <td style="vertical-align:middle">@employee.EmployeeId</td>
+                                <td style="vertical-align:middle">@employee.Name</td>
+                                <td style="vertical-align:middle">@employee.Email</td>
+                                <td style="vertical-align:middle">@employee.Role.Name</td>
+                                <td style="text-align:center">
+                                    <form asp-action="Delete">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-link" type="submit" value="Delete">
+                                                <span style="color: red">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                            <input type="hidden" asp-for="EmployeeId" class="form-control" value="@employee.Id" />
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</section>
+</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
