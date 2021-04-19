@@ -2,6 +2,7 @@
 
 <h4>Employee</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-2">
@@ -9,7 +10,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="EmployeeId" class="control-label">Id</label>
-                <input asp-for="EmployeeId" class="form-control" />
+                <input asp-for="EmployeeId" class="form-control" disabled value="@Model.EmployeeId" />
                 <span asp-validation-for="EmployeeId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -18,22 +19,28 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
                 @Html.DropDownListFor(model => model.Role, new SelectList(ViewBag.Roles, "Id", "Name"), "Select Role", new { @class = "form-select", @name = "role" })
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" id="create" />
             </div>
         </form>
     </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <table class="table table-hover" id="table" data-toggle="table" data-height="560">
             <thead class="thead-light">
                 <tr>
                     <th scope="col" class="col-1" data-field="EmployeeId" data-sortable="true">#</th>
                     <th scope="col" class="col-2" data-field="Name" data-sortable="true">Name</th>
+                    <th scope="col" class="col-2" data-field="Email" data-sortable="true">Email</th>
                     <th scope="col" class="col-1" data-field="Role.Name" data-sortable="true">Role</th>
                     <th scope="col" class="col-1"</th>
                 </tr>
@@ -44,16 +51,9 @@
                 <tr>
                     <th scope="row">@employee.EmployeeId</th>
                     <td>@employee.Name</td>
+                    <td>@employee.Email</td>
                     <td>@employee.Role.Name</td>
                     <td style="text-align:center">
-                        @*<button type="submit" class="btn-danger" onclick="location.href = '@Url.Action("Delete", "Employee", new { @class = "form", @name = "del"})'">
-                            Delete
-                            <span style="color: red">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </span>
-                        </button>*@
                         <form asp-action="Delete">
                             <div class="btn-group" role="group">
                                 <button class="btn btn-danger" type="submit" value="Delete">
@@ -64,37 +64,33 @@
                                         </svg>
                                     </span>
                                 </button>
-                                <input type="hidden" asp-for="EmployeeId" class="form-control" value="@employee.Id"/>
+                                <input type="hidden" asp-for="EmployeeId" class="form-control" value="@employee.Id" />
                             </div>
                         </form>
                     </td>
                 </tr>
                 }
-                </tbody>
+            </tbody>
         </table>
     </div>
 </div>
 
-@*<div>
-    <a asp-action="Index">Back to List</a>
-</div>*@
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        function customSort(sortName, sortOrder, data) {
-            var order = sortOrder === 'desc' ? -1 : 1
-            data.sort(function (a, b) {
-                var aa = +((a[sortName] + '').replace(/[^\d]/g, ''))
-                var bb = +((b[sortName] + '').replace(/[^\d]/g, ''))
-                if (aa < bb) {
-                    return order * -1
-                }
-                if (aa > bb) {
-                    return order
-                }
-                return 0
-            })
-        }
-    </script>
+<script>
+    function customSort(sortName, sortOrder, data) {
+        var order = sortOrder === 'desc' ? -1 : 1
+        data.sort(function (a, b) {
+            var aa = +((a[sortName] + '').replace(/[^\d]/g, ''))
+            var bb = +((b[sortName] + '').replace(/[^\d]/g, ''))
+            if (aa < bb) {
+                return order * -1
+            }
+            if (aa > bb) {
+                return order
+            }
+            return 0
+        })
+    }
+</script>
 }

@@ -41,8 +41,33 @@ namespace TimesheetApp.Repositories
 
         public void DeleteEmployee(ObjectId id)
         {
-            var filter = Builders<Employee>.Filter.Eq("Id", id);
-            _employee.DeleteOne(filter);
+            try
+            {
+                var filter = Builders<Employee>.Filter.Eq("Id", id);
+                _employee.DeleteOne(filter);
+            }
+            catch
+            {
+
+            }
+        }
+
+        public string GenerateEmployeeId()
+        {
+            string generate = "0";
+            var employees = LoadAll();
+            if (employees.Count() == 0 || employees.First().EmployeeId == null)
+            {
+                return generate;
+            }
+            else
+            {
+                var id = int.Parse(employees.ElementAt(employees.Count() - 1).EmployeeId) + 1;
+                generate = id.ToString();
+            }
+            
+            
+            return generate;
         }
     }
 }

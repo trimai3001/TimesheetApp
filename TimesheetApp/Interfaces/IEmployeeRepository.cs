@@ -13,5 +13,6 @@ namespace TimesheetApp.Interfaces
         public void CreateEmployee(Employee employee);
         public void DeleteEmployee(int employeeId);
         public void DeleteEmployee(ObjectId id);
+        public string GenerateEmployeeId();
     }
 }

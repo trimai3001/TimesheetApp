@@ -15,82 +15,52 @@ namespace TimesheetApp.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IRoleRepository _roleRepository;
+
+        private string employeeIdGenerate;
         public EmployeeController(IEmployeeRepository employeeRepository, IRoleRepository roleRepository)
         {
             _employeeRepository = employeeRepository;
             _roleRepository = roleRepository;
-        }
-        // GET: EmployeeController1
-        public ActionResult Index()
-        {
-            return View();
+            employeeIdGenerate = _employeeRepository.GenerateEmployeeId();
         }
 
-        // GET: EmployeeController1/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: EmployeeController1/Create
+        // GET: EmployeeController/Create
         public ActionResult Create()
         {
-            ViewBag.Roles = _roleRepository.LoadAll();
-            ViewBag.AllEmployee = _employeeRepository.LoadAll();
-            ViewBag._employee = _employeeRepository;
-            return View();
+            return RedirectToAction(nameof(Manage));
         }
 
-        // POST: EmployeeController1/Create
+        // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Employee employee, IFormCollection form)
         {
             try
             {
-                ViewBag.Roles = _roleRepository.LoadAll();
-                ViewBag.AllEmployee = _employeeRepository.LoadAll();
                 ObjectId roleId = ObjectId.Parse(form["role"].ToString());
-
                 employee.Role = _roleRepository.GetRoleById(roleId);
+                employee.EmployeeId = employeeIdGenerate;
                 _employeeRepository.CreateEmployee(employee);
                 ModelState.Clear();
+                ViewBag.ToastStatus = "success";
+                ViewBag.ToastMessage = "Create employee successfully";
+
             }
             catch
             {
-             
+                ViewBag.ToastStatus = "error";
+                ViewBag.ToastMessage = "Create employee unsuccessfully";
             }
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Manage));
         }
 
-        // GET: EmployeeController1/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeeController1/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(ObjectId id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: EmployeeController1/Delete/5
+        // GET: EmployeeController/Delete/5
         public ActionResult Delete()
         {
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Manage));
         }
 
-        // POST: EmployeeController1/Delete/5
+        // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(IFormCollection form)
@@ -99,12 +69,26 @@ namespace TimesheetApp.Controllers
             {
                 ObjectId id = ObjectId.Parse(form["EmployeeId"].ToString());
                 _employeeRepository.DeleteEmployee(id);
+                ViewBag.ToastStatus = "success";
+                ViewBag.ToastMessage = "Delete employee successfully";
             }
             catch (Exception e)
             {
-          
+                ViewBag.ToastStatus = "error";
+                ViewBag.ToastMessage = "Delete employee unsuccessfully";
             }
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Manage));
+        }
+
+        public ActionResult Manage()
+        {
+            ViewBag.Roles = _roleRepository.LoadAll();
+            ViewBag.AllEmployee = _employeeRepository.LoadAll();
+            var employee = new Employee
+            {
+                EmployeeId = employeeIdGenerate
+            };
+            return View(employee);
         }
     }
 }
