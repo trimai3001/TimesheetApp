@@ -69,5 +69,17 @@ namespace TimesheetApp.Repositories
             
             return generate;
         }
+
+        public Employee GetByObjectId(ObjectId objectId)
+        {
+            var employee = _employee.Find(e => e.Id == objectId).FirstOrDefault();
+            return employee;
+        }
+
+        public IEnumerable<Employee> GetAllByRole(string role)
+        {
+            var employee = _employee.Find(e => e.Role.Name == role).ToList();
+            return employee;
+        }
     }
 }

@@ -1,87 +1,66 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Interfaces;
+using TimeSheetApp.Models;
 
 namespace TimesheetApp.Controllers
 {
     public class ProjectController : Controller
     {
-        // GET: ProjectController
-        public ActionResult Index()
+        private readonly IProjectRepository _projectRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private Project _project;
+        public ProjectController(IProjectRepository projectRepositor, IEmployeeRepository employeeRepository)
         {
-            return View();
+            _projectRepository = projectRepositor;
+            _employeeRepository = employeeRepository;
+            _project = new Project();
         }
 
-        // GET: ProjectController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Manage()
         {
-            return View();
+            ViewBag.AllProject = _projectRepository.LoadAll();
+            ViewBag.Manager = _employeeRepository.GetAllByRole("Manager");
+            return View(_project);
         }
 
-        // GET: ProjectController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ProjectController/Create
+        // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Project project, IFormCollection form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                ObjectId id = ObjectId.Parse(form["employee"].ToString());
+                project.Manager = _employeeRepository.GetByObjectId(id);
+                _projectRepository.Create(project);
+                ModelState.Clear();
             }
-            catch
+            catch(Exception e)
             {
-                return View();
             }
+            return RedirectToAction(nameof(Manage));
         }
 
-        // GET: ProjectController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: ProjectController/Edit/5
+        // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Delete(IFormCollection form)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                ObjectId id = ObjectId.Parse(form["id"].ToString());
+                _projectRepository.Delete(id);
             }
-            catch
+            catch (Exception e)
             {
-                return View();
             }
-        }
-
-        // GET: ProjectController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProjectController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Manage));
         }
     }
 }

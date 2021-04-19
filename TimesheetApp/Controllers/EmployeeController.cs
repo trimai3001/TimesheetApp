@@ -15,6 +15,7 @@ namespace TimesheetApp.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IRoleRepository _roleRepository;
+        private Employee employee;
 
         private string employeeIdGenerate;
         public EmployeeController(IEmployeeRepository employeeRepository, IRoleRepository roleRepository)
@@ -22,12 +23,10 @@ namespace TimesheetApp.Controllers
             _employeeRepository = employeeRepository;
             _roleRepository = roleRepository;
             employeeIdGenerate = _employeeRepository.GenerateEmployeeId();
-        }
-
-        // GET: EmployeeController/Create
-        public ActionResult Create()
-        {
-            return RedirectToAction(nameof(Manage));
+            employee = new Employee
+            {
+                EmployeeId = employeeIdGenerate
+            };
         }
 
         // POST: EmployeeController/Create
@@ -42,21 +41,10 @@ namespace TimesheetApp.Controllers
                 employee.EmployeeId = employeeIdGenerate;
                 _employeeRepository.CreateEmployee(employee);
                 ModelState.Clear();
-                ViewBag.ToastStatus = "success";
-                ViewBag.ToastMessage = "Create employee successfully";
-
             }
             catch
             {
-                ViewBag.ToastStatus = "error";
-                ViewBag.ToastMessage = "Create employee unsuccessfully";
             }
-            return RedirectToAction(nameof(Manage));
-        }
-
-        // GET: EmployeeController/Delete/5
-        public ActionResult Delete()
-        {
             return RedirectToAction(nameof(Manage));
         }
 
@@ -69,13 +57,9 @@ namespace TimesheetApp.Controllers
             {
                 ObjectId id = ObjectId.Parse(form["EmployeeId"].ToString());
                 _employeeRepository.DeleteEmployee(id);
-                ViewBag.ToastStatus = "success";
-                ViewBag.ToastMessage = "Delete employee successfully";
             }
             catch (Exception e)
             {
-                ViewBag.ToastStatus = "error";
-                ViewBag.ToastMessage = "Delete employee unsuccessfully";
             }
             return RedirectToAction(nameof(Manage));
         }
@@ -84,10 +68,6 @@ namespace TimesheetApp.Controllers
         {
             ViewBag.Roles = _roleRepository.LoadAll();
             ViewBag.AllEmployee = _employeeRepository.LoadAll();
-            var employee = new Employee
-            {
-                EmployeeId = employeeIdGenerate
-            };
             return View(employee);
         }
     }

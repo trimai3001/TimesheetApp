@@ -21,7 +21,7 @@ namespace TimesheetApp.Repositories
 
         public Role GetRoleById(ObjectId objectId)
         {
-            var role = _role.Find<Role>(r => r.Id == objectId).FirstOrDefault();
+            var role = _role.Find(r => r.Id == objectId).FirstOrDefault();
             return role;
         }
 

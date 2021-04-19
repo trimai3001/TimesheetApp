@@ -14,5 +14,7 @@ namespace TimesheetApp.Interfaces
         public void DeleteEmployee(int employeeId);
         public void DeleteEmployee(ObjectId id);
         public string GenerateEmployeeId();
+        public Employee GetByObjectId(ObjectId objectId);
+        public IEnumerable<Employee> GetAllByRole(string role);
     }
 }
