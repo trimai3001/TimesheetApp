@@ -22,6 +22,7 @@ namespace TimeSheetApp.Models
         public Role Role { get; set; }
         public Employee()
         {
+            Id = ObjectId.GenerateNewId();
             Role = new Role();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,5 +11,7 @@ namespace TimesheetApp.Interfaces
     {
         public IEnumerable<Employee> LoadAll();
         public void CreateEmployee(Employee employee);
+        public void DeleteEmployee(int employeeId);
+        public void DeleteEmployee(ObjectId id);
     }
 }
