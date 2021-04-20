@@ -29,7 +29,7 @@ namespace TimesheetApp.Controllers
                 EmployeeId = employeeIdGenerate
             };
         }
-
+        
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -46,9 +46,15 @@ namespace TimesheetApp.Controllers
             catch
             {
             }
-            return View(nameof(Manage));
+            return RedirectToAction(nameof(Manage));
         }
 
+        public ActionResult Delete()
+        {
+            ViewBag.AllEmployee = _employeeRepository.LoadAll();
+            ViewBag.Roles = _roleRepository.LoadAll();
+            return View();
+        }
         // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -62,7 +68,7 @@ namespace TimesheetApp.Controllers
             catch (Exception e)
             {
             }
-            return View(nameof(Manage));
+            return RedirectToAction(nameof(Manage));
         }
 
         public ActionResult Manage()

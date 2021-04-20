@@ -54,7 +54,7 @@ namespace TimesheetApp.Controllers
         {
             try
             {
-                ObjectId id = ObjectId.Parse(form["id"].ToString());
+                ObjectId id = ObjectId.Parse(form["Id"].ToString());
                 _projectRepository.Delete(id);
             }
             catch (Exception e)

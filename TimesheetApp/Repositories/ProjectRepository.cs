@@ -39,8 +39,15 @@ namespace TimesheetApp.Repositories
 
         public void Delete(ObjectId id)
         {
-            var filter = Builders<Project>.Filter.Eq("Id", id);
-            _project.DeleteOne(filter);
+            try
+            {
+                var filter = Builders<Project>.Filter.Eq("Id", id);
+                _project.DeleteOne(filter);
+            }
+            catch(Exception e)
+            {
+
+            }
         }
     }
 }
