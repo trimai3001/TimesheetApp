@@ -15,82 +15,41 @@ namespace TimesheetApp.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IRoleRepository _roleRepository;
+        private Employee employee;
+
+        private string employeeIdGenerate;
         public EmployeeController(IEmployeeRepository employeeRepository, IRoleRepository roleRepository)
         {
             _employeeRepository = employeeRepository;
             _roleRepository = roleRepository;
-        }
-        // GET: EmployeeController1
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: EmployeeController1/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
+            employeeIdGenerate = _employeeRepository.GenerateEmployeeId();
+            
+            employee = new Employee
+            {
+                EmployeeId = employeeIdGenerate
+            };
         }
 
-        // GET: EmployeeController1/Create
-        public ActionResult Create()
-        {
-            ViewBag.Roles = _roleRepository.LoadAll();
-            ViewBag.AllEmployee = _employeeRepository.LoadAll();
-            ViewBag._employee = _employeeRepository;
-            return View();
-        }
-
-        // POST: EmployeeController1/Create
+        // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Employee employee, IFormCollection form)
         {
             try
             {
-                ViewBag.Roles = _roleRepository.LoadAll();
-                ViewBag.AllEmployee = _employeeRepository.LoadAll();
-                ObjectId roleId = ObjectId.Parse(form["role"].ToString());
-
+                ObjectId roleId = ObjectId.Parse(form["Role"].ToString());
                 employee.Role = _roleRepository.GetRoleById(roleId);
+                employee.EmployeeId = employeeIdGenerate;
                 _employeeRepository.CreateEmployee(employee);
                 ModelState.Clear();
             }
             catch
             {
-             
             }
-            return RedirectToAction(nameof(Create));
+            return View(nameof(Manage));
         }
 
-        // GET: EmployeeController1/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: EmployeeController1/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(ObjectId id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: EmployeeController1/Delete/5
-        public ActionResult Delete()
-        {
-            return RedirectToAction(nameof(Create));
-        }
-
-        // POST: EmployeeController1/Delete/5
+        // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(IFormCollection form)
@@ -102,9 +61,15 @@ namespace TimesheetApp.Controllers
             }
             catch (Exception e)
             {
-          
             }
-            return RedirectToAction(nameof(Create));
+            return View(nameof(Manage));
+        }
+
+        public ActionResult Manage()
+        {
+            ViewBag.Roles = _roleRepository.LoadAll();
+            ViewBag.AllEmployee = _employeeRepository.LoadAll();            
+            return View(employee);
         }
     }
 }
