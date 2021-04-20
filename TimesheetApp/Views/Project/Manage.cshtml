@@ -65,9 +65,8 @@
                                 <td style="vertical-align:middle">@project.Name</td>
                                 <td style="vertical-align:middle">@project.Manager.Name</td>
                                 <td style="vertical-align:middle">
-                                    <form asp-action="Delete">
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-link" type="submit" value="Delete">
+                                            <button class="btn btn-link myBtn" type="button" value="Delete" data-toggle="modal" data-id="@project.Id" data-content="@project.Name" id=@project.Id>
                                                 <span style="color: red">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
@@ -75,9 +74,7 @@
                                                     </svg>
                                                 </span>
                                             </button>
-                                            <input type="hidden" asp-for="Id" class="form-control" value="@project.Id" />
                                         </div>
-                                    </form>
                                 </td>
                             </tr>
                         }
@@ -88,9 +85,66 @@
     </div>
 </div>
 
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="delModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                    <div class="modal-header" style="background-color:tomato">
+                        <h4 class="modal-title" style="background-color:tomato">Delete Project</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="content" style="font-size: 18px"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-success" value="Delete" id="accept">Accept</button>
+                            @*<input type="hidden" asp-for="Id" class="form-control" value="" id="del" />*@
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-default" value="Delete" data-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="notify" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:lightgreen">
+                    <h4 class="modal-title" style="background-color:lightgreen">Delete Project</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="notifyContent" style="font-size: 18px"></p>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-2">
+                        <form asp-action="Delete">
+                            <button type="submit" class="btn" value="Delete" style="color: #fff; background-color: #28a745; border-color: #28a745;">Okay</button>
+                            <input type="hidden" asp-for="Id" class="form-control" value="" id="del" />
+                        </form>
+                    </div>
+                    <div class="col-md-5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+    <script>IDBCursor
         function customSort(sortName, sortOrder, data) {
             var order = sortOrder === 'desc' ? -1 : 1
             data.sort(function (a, b) {
@@ -125,6 +179,26 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
+        });
+
+        $(document).on("click", ".myBtn", function () {
+            var myId = $(this).data('id');
+            var myName = $(this).data('content');
+            console.log(myId);
+            $("#delModal").modal();
+            // As pointed out in comments, 
+            // it is unnecessary to have to manually call the modal.
+            // $('#addBookDialog').modal('show');
+            $("#del").val(myId);
+            $("#content").text('Are you sure to delete ' + myName + ' project?');
+        });
+
+        $(document).on("click", "#accept", function () {
+            $("#delModal").modal('hide');
+            $("#notify").modal({ backdrop: 'static', keyboard: false });
+            var myName = $('.myBtn').data('content');
+            $("#notifyContent").text('Delete ' + myName + ' project successful.');
+            
         });
     </script>
 }

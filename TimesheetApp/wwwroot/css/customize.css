@@ -9581,3 +9581,11 @@ th {
 .modal-footer {
     background-color: #f9f9f9;
 }
+
+.modal-dialog {
+    -webkit-transform: translate(0,-50%);
+    -o-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+    top: 40%;
+    margin: 0 auto;
+}

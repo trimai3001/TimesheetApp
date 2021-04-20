@@ -26,6 +26,7 @@ namespace TimesheetApp.Controllers
         {
             ViewBag.AllProject = _projectRepository.LoadAll();
             ViewBag.Manager = _employeeRepository.GetAllByRole("Manager");
+            ViewBag.Project = new Project();
             return View(_project);
         }
 

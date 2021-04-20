@@ -49,5 +49,12 @@ namespace TimesheetApp.Repositories
 
             }
         }
+
+        public Project FindOne(ObjectId id)
+        {
+            var filter = Builders<Project>.Filter.Eq("Id", id);
+            var project = _project.Find(filter).FirstOrDefault();
+            return project;
+        }
     }
 }
