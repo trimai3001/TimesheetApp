@@ -26,6 +26,10 @@ namespace TimesheetApp.Controllers
             _project = projectRepository;
             _workingDay = workingDayRepository;
             _activity = activityRepository;
+
+            var workingWeek = new WorkingWeek();
+            workingWeek.Employee
+
         }
         public IActionResult Index()
         {

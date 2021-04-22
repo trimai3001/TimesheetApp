@@ -101,42 +101,16 @@
                     <div class="modal-footer">
                         <div class="col-md-4"></div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-success" value="Delete" id="accept">Accept</button>
-                            @*<input type="hidden" asp-for="Id" class="form-control" value="" id="del" />*@
+                            <form asp-action="Delete">
+                                <button type="submit" class="btn btn-success" value="Delete" id="accept">Accept</button>
+                                <input type="hidden" asp-for="Id" class="form-control" value="" id="del" />
+                            </form>
                         </div>
                         <div class="col-md-2">
                             <button type="button" class="btn btn-default" value="Delete" data-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-md-4"></div>
                     </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <!-- Modal -->
-    <div class="modal fade" id="notify" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header" style="background-color:lightgreen">
-                    <h4 class="modal-title" style="background-color:lightgreen">Delete Project</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="notifyContent" style="font-size: 18px"></p>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-md-5"></div>
-                    <div class="col-md-2">
-                        <form asp-action="Delete">
-                            <button type="submit" class="btn" value="Delete" style="color: #fff; background-color: #28a745; border-color: #28a745;">Okay</button>
-                            <input type="hidden" asp-for="Id" class="form-control" value="" id="del" />
-                        </form>
-                    </div>
-                    <div class="col-md-5"></div>
-                </div>
             </div>
         </div>
     </div>
@@ -186,19 +160,8 @@
             var myName = $(this).data('content');
             console.log(myId);
             $("#delModal").modal();
-            // As pointed out in comments, 
-            // it is unnecessary to have to manually call the modal.
-            // $('#addBookDialog').modal('show');
             $("#del").val(myId);
             $("#content").text('Are you sure to delete ' + myName + ' project?');
-        });
-
-        $(document).on("click", "#accept", function () {
-            $("#delModal").modal('hide');
-            $("#notify").modal({ backdrop: 'static', keyboard: false });
-            var myName = $('.myBtn').data('content');
-            $("#notifyContent").text('Delete ' + myName + ' project successful.');
-            
         });
     </script>
 }
