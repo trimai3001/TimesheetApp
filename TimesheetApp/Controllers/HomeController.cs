@@ -20,6 +20,7 @@ namespace TimesheetApp.Controllers
         private readonly IWorkingDayRepository _workingDay;
         private readonly IActivityRepository _activity;
 
+        private List<WorkingWeek> _workingWeeks;
         public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IWorkingDayRepository workingDayRepository, IActivityRepository activityRepository)
         {
             _billingCategory = billingCategoryRepository;
@@ -28,7 +29,7 @@ namespace TimesheetApp.Controllers
             _activity = activityRepository;
 
             var workingWeek = new WorkingWeek();
-            workingWeek.Employee
+            _workingWeeks = new List<WorkingWeek>() { workingWeek };
 
         }
         public IActionResult Index()
@@ -67,6 +68,11 @@ namespace TimesheetApp.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Manage()
+        {
+            return View(_workingWeeks);
         }
     }
 }

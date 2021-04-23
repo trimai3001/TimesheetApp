@@ -18,6 +18,8 @@ namespace TimesheetApp.Models
         [BsonElement("workHour")]
         public int WorkHour { get; set; }
 
+        public ObjectId WorkingWeekId { get; set; }
+
         public WorkingDay()
         {
             Id = ObjectId.GenerateNewId();

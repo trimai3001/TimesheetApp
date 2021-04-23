@@ -46,6 +46,7 @@ namespace TimesheetApp.Models
             for (var i = 0; i < 7; i++)
             {
                 var workingDay = new WorkingDay();
+                workingDay.WorkingWeekId = Id;
                 WorkingDays.Add(workingDay);
             }
             Order = 1;
