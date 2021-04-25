@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimesheetApp.ViewModels;
 using TimeSheetApp.Models;
@@ -28,6 +29,8 @@ namespace TimesheetApp.Controllers
             {
                 EmployeeId = employeeIdGenerate
             };
+
+            
         }
         
         // POST: EmployeeController/Create
@@ -73,6 +76,7 @@ namespace TimesheetApp.Controllers
 
         public ActionResult Manage()
         {
+            ViewBag.Test = HttpContext.Session.Get<Employee>("Employee");
             ViewBag.Roles = _roleRepository.LoadAll();
             ViewBag.AllEmployee = _employeeRepository.LoadAll();            
             return View(employee);

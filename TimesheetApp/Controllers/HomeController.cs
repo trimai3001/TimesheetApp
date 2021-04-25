@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,69 +11,113 @@ using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimesheetApp.Models;
 using TimesheetApp.ViewModels;
+using TimeSheetApp.Models;
 
 namespace TimesheetApp.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly IWorkingWeekRepository _workingWeekRepository;
+        private readonly IWorkingWeekRepository _workingWeekRepository;
         private readonly IBillingCategoryRepository _billingCategory;
         private readonly IProjectRepository _project;
-        private readonly IWorkingDayRepository _workingDay;
         private readonly IActivityRepository _activity;
 
-        private List<WorkingWeek> _workingWeeks;
-        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IWorkingDayRepository workingDayRepository, IActivityRepository activityRepository)
+        private WorkingWeekList _workingWeeks;
+        private ObjectId _employeeId;
+        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository)
         {
             _billingCategory = billingCategoryRepository;
             _project = projectRepository;
-            _workingDay = workingDayRepository;
             _activity = activityRepository;
+            _workingWeekRepository = workingWeekRepository;
 
-            var workingWeek = new WorkingWeek();
-            _workingWeeks = new List<WorkingWeek>() { workingWeek };
-
-        }
-        public IActionResult Index()
-        {
-            var homeViewModel = new HomeViewModel
-            {
-                BillingCategories = _billingCategory.LoadAll(),
-                Projects = _project.LoadAll(),
-                WorkingDays = _workingDay.LoadCurrentWeek(),
-                Activities = _activity.LoadAll(),
-                DateName = Utilities.GetDaysName(),
-                SimpleDate = Utilities.GetSimpleDate(Utilities.GetDaysOfCurrentWeek()),
-            };
-
-            return View(homeViewModel);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Submit(WorkingWeek workingWeek)
-        {
-            
-            return View();
-        }
-
-        public IActionResult AddRow(WorkingWeek workingWeek)
-        {
-
-            return View();
+            ViewBag.Message = "";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult AddRow()
+        {
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+            var week = new WorkingWeek(_employeeId);
+            var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
+            week.Order = workingWeeks.Last().Order + 1;
+            _workingWeekRepository.Create(week);
+
+            return RedirectToAction(nameof(Manage));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(IFormCollection form)
+        {
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+            ObjectId id = ObjectId.Parse(form["week.Id"].ToString());
+            _workingWeekRepository.Delete(id);
+
+            return RedirectToAction(nameof(Manage));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Submit(IFormCollection form)
+        {
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+            var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
+
+            if (workingWeeks.Find(s => s.Project.Name == null) != null)
+            {
+                HttpContext.Session.SetString("SubmitError", "Please select 'Project' and submit again.");
+                
+                //return RedirectToAction(nameof(Manage));
+            }
+            else if (workingWeeks.Find(s => s.BillingCategory.Name == null) != null)
+            {
+                HttpContext.Session.SetString("SubmitError", "Please select 'Billing Category' and submit again.");
+                //return RedirectToAction(nameof(Manage));
+            }
+            else if (workingWeeks.Find(s => s.Activity.Name == null) != null)
+            {
+                HttpContext.Session.SetString("SubmitError", "Please select 'Billing Category' and submit again.");
+            }
+            else
+            {
+                foreach (var week in workingWeeks)
+                {
+                    _workingWeekRepository.SubmitToApprove(week);
+                }
+            }
+
+            return RedirectToAction(nameof(Manage));
         }
 
         public IActionResult Manage()
         {
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+
+            var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
+
+            _workingWeeks = new WorkingWeekList
+            {
+                WorkingWeeks = workingWeeks.OrderBy(o => o.Order).ToList()
+            };
+
+            var error = HttpContext.Session.Get<string>("SubmitError");
+            if (error != null)
+            {
+                ViewBag.Message = error;
+            }
+            
+            ViewBag.BillingCategory = _billingCategory.LoadAll();
+            ViewBag.Project = _project.LoadAll();
+            ViewBag.Activity = _activity.LoadAll();
+            ViewBag.DayName = Utilities.GetDaysName();
+            ViewBag.SimpleDate = Utilities.GetSimpleDate(Utilities.GetDaysOfCurrentWeek());
+
             return View(_workingWeeks);
         }
     }

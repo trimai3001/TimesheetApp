@@ -9589,3 +9589,9 @@ th {
     top: 40%;
     margin: 0 auto;
 }
+
+button,
+svg {
+    display: inline-block;
+    vertical-align: middle;
+}

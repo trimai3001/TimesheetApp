@@ -10,18 +10,18 @@ namespace TimeSheetApp.Models
         [BsonElement("_id")]
         public ObjectId Id { get; set; }
 
-        [BsonRequired]
+        [Required]
         [StringLength(50, MinimumLength = 3)]
         [BsonElement("username")]
-        public int Username { get; set; }
+        public string Username { get; set; }
 
-        [BsonRequired]
+        [Required]
         [StringLength(50, MinimumLength = 3)]
         [BsonElement("password")]
         public string Password { get; set; }
 
         [BsonElement("employeeId")]
-        public string EmployeeId { get; set; }
+        public ObjectId EmployeeId { get; set; }
 
         public User()
         {

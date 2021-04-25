@@ -27,27 +27,13 @@ namespace TimesheetApp.Repositories
 
         public void Create(Project project)
         {
-            try
-            {
-                _project.InsertOne(project);
-            }
-            catch
-            {
-
-            }
+            _project.InsertOne(project);
         }
 
         public void Delete(ObjectId id)
         {
-            try
-            {
-                var filter = Builders<Project>.Filter.Eq("Id", id);
-                _project.DeleteOne(filter);
-            }
-            catch(Exception e)
-            {
-
-            }
+            var filter = Builders<Project>.Filter.Eq("Id", id);
+            _project.DeleteOne(filter);
         }
 
         public Project FindOne(ObjectId id)

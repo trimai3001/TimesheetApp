@@ -56,20 +56,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <p><span>Sign In</span></p>
                     </div>
                     <div class="signin">
-                        <form>
+                        <form asp-action="Login">
                             <div class="log-input">
                                 <div class="log-input">
-                                    <input type="text" class="user" value="Yourname" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address:';}" />
+                                    <input asp-for="Username" type="text" class="user" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Username';}" />
                                 </div>
                                 <div class="clearfix"> </div>
                             </div>
                             <div class="log-input">
                                 <div class="log-input">
-                                    <input type="password" class="lock" value="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address:';}" />
+                                    <input asp-for="Password" type="password" class="lock" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" />
                                 </div>
                                 <div class="clearfix"> </div>
                             </div>
-                            <input class="btn"type="submit" value="Sign In">
+                            <span class="text-danger">@ViewBag.Message</span>
+                            <input class="btn" type="submit" value="Sign In">
                         </form>
                     </div>
                 </div>

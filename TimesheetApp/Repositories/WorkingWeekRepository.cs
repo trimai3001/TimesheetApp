@@ -10,42 +10,54 @@ using TimesheetApp.Models;
 
 namespace TimesheetApp.Repositories
 {
-    public class WorkingWeekRepository : IWorkingWeekRepository
+    public class WorkingWeekRepository : BaseRepository, IWorkingWeekRepository
     {
-        private readonly IMongoCollection<WorkingWeek> _workingWeeks;
+        private readonly IMongoCollection<WorkingWeek> _workingWeek;
+        public WorkingWeekRepository(IMongoClient client) : base(client)
+        {
+            var collection = database.GetCollection<WorkingWeek>(jObject.SelectToken("workingWeekCollection").ToString());
+
+            _workingWeek = collection;
+        }
 
         public IEnumerable<WorkingWeek> LoadAll()
         {
-            var workingWeek = _workingWeeks.Find(_ => true).ToList();
+            var workingWeek = _workingWeek.Find(_ => true).ToList();
             return workingWeek;
         }
 
-        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrent()
+        public List<WorkingWeek> LoadWorkingWeekOfCurrentByEmployeeId(ObjectId employeeId)
         {
+            var workingWeeks = new List<WorkingWeek>();
             var monday = Utilities.GetMonday(DateTime.Today);
-            var workingWeeks = _workingWeeks.Find(w => w.From == monday).ToList();
-
-            if(workingWeeks.Count() == 0)
-            {
-                var workingWeek = new WorkingWeek();
-            }
-
-            return workingWeeks;
-        }
-
-        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrentByEmployeeId(ObjectId employeeId)
-        {
-            var monday = Utilities.GetMonday(DateTime.Today);
-            var workingWeeks = _workingWeeks.Find(w => w.From == monday && w.Employee.Id == employeeId).ToList();
+            workingWeeks = _workingWeek.Find(w => w.From == monday && w.EmployeeId == employeeId).ToList();
 
             if (workingWeeks.Count() == 0)
             {
-                var workingWeek = new WorkingWeek();
+                var workingWeek = new WorkingWeek(employeeId);
+                workingWeeks.Add(workingWeek);
+                Create(workingWeek);
             }
+
 
             return workingWeeks;
         }
 
-        
+        public void Create(WorkingWeek workingWeek)
+        {
+            _workingWeek.InsertOne(workingWeek);
+        }
+
+        public void Delete(ObjectId id)
+        {
+            var filter = Builders<WorkingWeek>.Filter.Eq("Id", id);
+            _workingWeek.DeleteOne(filter);
+        }
+
+        public void SubmitToApprove(WorkingWeek workingWeek)
+        {
+            var toApproveCollection = database.GetCollection<WorkingWeek>(jObject.SelectToken("ApproveCollection").ToString());
+            toApproveCollection.InsertOne(workingWeek);
+        }
     }
 }

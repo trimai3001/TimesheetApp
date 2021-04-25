@@ -17,14 +17,15 @@ namespace TimesheetApp.Models
         public DateTime WorkDate { get; set; }
         [BsonElement("workHour")]
         public int WorkHour { get; set; }
-
+        [BsonElement("workingWeekId")]
         public ObjectId WorkingWeekId { get; set; }
 
-        public WorkingDay()
+        public WorkingDay(ObjectId workingWeekId)
         {
             Id = ObjectId.GenerateNewId();
             WorkDate = new DateTime();
             WorkHour = 0;
+            WorkingWeekId = workingWeekId;
         }
     }
 }

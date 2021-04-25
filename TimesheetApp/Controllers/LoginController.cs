@@ -1,88 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using TimesheetApp.Helper;
+using TimesheetApp.Interfaces;
 using TimeSheetApp.Models;
 
 namespace TimesheetApp.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: LoginController
-        public ActionResult Index()
+        private readonly IUserRepository _userRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private IEnumerable<User> _user;
+        public LoginController(IUserRepository userRepository, IEmployeeRepository employeeRepository)
         {
-            return View();
-        }
-
-        // GET: LoginController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: LoginController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: LoginController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: LoginController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: LoginController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: LoginController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: LoginController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _userRepository = userRepository;
+            _user = _userRepository.LoadAll();
+            _employeeRepository = employeeRepository;
+            ViewBag.Message = "";
         }
 
         public ActionResult Login()
@@ -95,8 +30,20 @@ namespace TimesheetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(User user)
         {
+            var member = _user.ToList().Find(u => u.Username.ToString().ToLower() == user.Username.ToLower() && u.Password == user.Password);
+
+            if(member == null)
+            {
+                ViewBag.Message = "Your username or password is incorrect. Please try again.";
+                return View();
+            }
+
+            ViewBag.Message = "";
             
-            return View();
+            //var employeeInfo = _employeeRepository.GetByObjectId(member.EmployeeId);
+            HttpContext.Session.Set("EmployeeId", member.EmployeeId.ToString());
+
+            return RedirectToAction("Manage", "Home");
         }
     }
 }

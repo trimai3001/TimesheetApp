@@ -7,9 +7,12 @@ using TimesheetApp.Models;
 
 namespace TimesheetApp.Interfaces
 {
-    interface IWorkingWeekRepository
+    public interface IWorkingWeekRepository
     {
         public IEnumerable<WorkingWeek> LoadAll();
-        public IEnumerable<WorkingWeek> LoadWorkingWeekOfCurrent();
+        public List<WorkingWeek> LoadWorkingWeekOfCurrentByEmployeeId(ObjectId employeeId);
+        public void Create(WorkingWeek workingWeek);
+        public void Delete(ObjectId id);
+        public void SubmitToApprove(WorkingWeek workingWeek);
     }
 }
