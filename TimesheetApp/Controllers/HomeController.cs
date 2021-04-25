@@ -21,6 +21,7 @@ namespace TimesheetApp.Controllers
         private readonly IBillingCategoryRepository _billingCategory;
         private readonly IProjectRepository _project;
         private readonly IActivityRepository _activity;
+        private readonly IEmployeeRepository _employeeRepository;
 
         private WorkingWeekList _workingWeeks;
         private ObjectId _employeeId;
@@ -28,13 +29,13 @@ namespace TimesheetApp.Controllers
         [TempData]
         public string Message { get; set; }
 
-        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository)
+        public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository, IEmployeeRepository employeeRepository)
         {
             _billingCategory = billingCategoryRepository;
             _project = projectRepository;
             _activity = activityRepository;
             _workingWeekRepository = workingWeekRepository;
-
+            _employeeRepository = employeeRepository;
             ViewBag.Message = "";
         }
 
@@ -68,11 +69,11 @@ namespace TimesheetApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Submit(IFormCollection form)
+        public IActionResult Submit(IFormCollection form, List<WorkingWeek> WorkingWeeksss, WorkingWeekList list)
         {
             _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
             var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
-
+            
             if (workingWeeks.Find(s => s.Project.Name == null) != null)
             {
                 Message = "Please select 'Project' and submit again.";
@@ -109,7 +110,9 @@ namespace TimesheetApp.Controllers
             {
                 WorkingWeeks = workingWeeks.OrderBy(o => o.Order).ToList()
             };
-            
+
+            ViewBag.Permission = _employeeRepository.GetByObjectId(_employeeId).Role.Name;
+
             ViewBag.BillingCategory = _billingCategory.LoadAll();
             ViewBag.Project = _project.LoadAll();
             ViewBag.Activity = _activity.LoadAll();
