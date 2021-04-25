@@ -30,36 +30,37 @@
             }
         </div>
         <div class="panel-body panel-body-inputin">
-            @foreach (var week in Model.WorkingWeeks)
+            @for(var i = 0; i < Model.WorkingWeeks.Count; i++)
             {
-                <form asp-action="Submit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="Submit" id="#form" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).Project, new SelectList(ViewBag.Project, "Id", "Name"), "Select Project", new { @class = "form-select form-control1", @name = "Project" })
-                        </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.DropDownListFor(list => list.WorkingWeeks[i].Project, new SelectList(ViewBag.Project, "Id", "Name"), "Select Project", new { @class = "form-select form-control1", @name = "Project" + @i })
                     </div>
+                </div>
 
+                <div class="form-group">
+                    <div class="col-md-1">
+                        @Html.DropDownListFor(list => list.WorkingWeeks[i].Activity, new SelectList(ViewBag.Activity, "Id", "Name"), "Select Activity", new { @class = "form-select form-control1", @name = "Activity" + @i })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-1">
+                        @Html.DropDownListFor(list => list.WorkingWeeks[i].BillingCategory, new SelectList(ViewBag.BillingCategory, "Id", "Name"), "Select Billing Category", new { @class = "form-select form-control1", @name = "BillingCategory" + @i })
+                    </div>
+                </div>
+                @for(var j = 0; j < Model.WorkingWeeks[i].WorkingDays.Count; j++)
+                {
                     <div class="form-group">
                         <div class="col-md-1">
-                            @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).Activity, new SelectList(ViewBag.Activity, "Id", "Name"), "Select Activity", new { @class = "form-select form-control1", @name = "Activity" })
+                            @Html.TextBoxFor(t => t.WorkingWeeks[i].WorkingDays[j].WorkHour, new { @class = "text-center input-working-day form-control1", @type = "number" })
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-1">
-                            @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).BillingCategory, new SelectList(ViewBag.BillingCategory, "Id", "Name"), "Select Billing Category", new { @class = "form-select form-control1", @name = "BillingCategory" })
-                        </div>
-                    </div>
-                    @foreach (var day in week.WorkingDays)
-                    {
-                        <div class="form-group">
-                            <div class="col-md-1">
-                                <input class="text-center input-working-day form-control1" value="@day.WorkHour" id="@day.Id" />
-                            </div>
-                        </div>
-                    }
-                </form>
+                }
+                <input class="btn btn-success hidden btnSubmit" type="submit" value="Submit" id="" />
+            </form>
                 <div class="form-group">
                     <div class="col-md-1">
                         <form asp-action="Delete">
@@ -71,7 +72,7 @@
                                     </svg>
                                 </span>
                             </button>
-                            <input type="hidden" class="form-control" value="@week.Id" asp-for="@week.Id" />
+                            <input type="hidden" class="form-control" value="@Model.WorkingWeeks[i].Id" asp-for="@Model.WorkingWeeks[i].Id" />
                         </form>
                     </div>
                 </div>
@@ -82,7 +83,12 @@
         <div class="panel-body panel-body-inputin">
             <div class="col-md-1"></div>
             <div class="col-md-5">
-                <span class="text-danger">@ViewBag.Message</span>
+                @{
+                    if (TempData.Peek("Message") != null)
+                    {
+                        <span class="text-danger">@TempData.Peek("Message")</span>
+                    }
+                }
             </div>
         </div>
         <div class="panel-body panel-body-inputin">
@@ -94,8 +100,8 @@
                     </form>
                 </div>
                 <div class="col-md-1">
-                    <form asp-action="Submit">
-                        <input class="btn btn-success" type="submit" value="Submit" />
+                    <form asp-action="Submit" method="post">
+                        <input class="btn btn-success" type="submit" value="Submit" id="btnClick" formaction="Submit"/>
                     </form>
                 </div>
             </div>

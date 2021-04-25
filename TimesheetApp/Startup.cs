@@ -31,6 +31,12 @@ namespace TimesheetApp
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddControllersWithViews()
+                .AddSessionStateTempDataProvider();
+            services.AddRazorPages()
+                .AddSessionStateTempDataProvider();
+
+            services.AddSession();
             services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
 
             services.AddControllersWithViews();

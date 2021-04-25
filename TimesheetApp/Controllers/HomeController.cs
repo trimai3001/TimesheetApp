@@ -24,6 +24,10 @@ namespace TimesheetApp.Controllers
 
         private WorkingWeekList _workingWeeks;
         private ObjectId _employeeId;
+
+        [TempData]
+        public string Message { get; set; }
+
         public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository)
         {
             _billingCategory = billingCategoryRepository;
@@ -71,18 +75,18 @@ namespace TimesheetApp.Controllers
 
             if (workingWeeks.Find(s => s.Project.Name == null) != null)
             {
-                HttpContext.Session.SetString("SubmitError", "Please select 'Project' and submit again.");
+                Message = "Please select 'Project' and submit again.";
                 
                 //return RedirectToAction(nameof(Manage));
             }
             else if (workingWeeks.Find(s => s.BillingCategory.Name == null) != null)
             {
-                HttpContext.Session.SetString("SubmitError", "Please select 'Billing Category' and submit again.");
+                Message = "Please select 'Billing Category' and submit again.";
                 //return RedirectToAction(nameof(Manage));
             }
             else if (workingWeeks.Find(s => s.Activity.Name == null) != null)
             {
-                HttpContext.Session.SetString("SubmitError", "Please select 'Billing Category' and submit again.");
+                Message = "Please select 'Billing Category' and submit again.";
             }
             else
             {
@@ -105,12 +109,6 @@ namespace TimesheetApp.Controllers
             {
                 WorkingWeeks = workingWeeks.OrderBy(o => o.Order).ToList()
             };
-
-            var error = HttpContext.Session.Get<string>("SubmitError");
-            if (error != null)
-            {
-                ViewBag.Message = error;
-            }
             
             ViewBag.BillingCategory = _billingCategory.LoadAll();
             ViewBag.Project = _project.LoadAll();
