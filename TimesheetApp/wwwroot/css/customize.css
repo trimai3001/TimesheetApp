@@ -4673,7 +4673,7 @@ h2.form-heading {
 }
 
 body#login {
-    background: url(../images/bg.jpg)no-repeat;
+    background: url(../easyadminLayout/images/bg.jpg)no-repeat;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -5194,7 +5194,7 @@ h1.blank, h3.blank1 {
 }
 
 .main-grid1-grids {
-    background: url(../images/2.jpg) no-repeat 0px 0px;
+    background: url(../easyadminLayout/images/2.jpg) no-repeat 0px 0px;
     min-height: 300px;
     background-size: cover;
     -webkit-background-size: cover;
@@ -5492,7 +5492,7 @@ span.badge1 {
         }
 
 .sign-in-form-top {
-    background: url(../images/3.jpg) no-repeat 0px -55px;
+    background: url(../easyadminLayout/images/3.jpg) no-repeat 0px -55px;
     display: block;
     min-height: 150px;
     padding: 3em 0 0;
@@ -5527,7 +5527,7 @@ span.badge1 {
 
     .signin:after {
         content: '';
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         display: block;
         width: 595px;
         height: 20px;
@@ -5555,11 +5555,11 @@ span.badge1 {
 }
 
 .log-input input.user {
-    background: url(../images/user.png)no-repeat 8px 10px #fff;
+    background: url(../easyadminLayout/images/user.png)no-repeat 8px 10px #fff;
 }
 
 .log-input input.lock {
-    background: url(../images/lock.png)no-repeat 8px 10px #fff;
+    background: url(../easyadminLayout/images/lock.png)no-repeat 8px 10px #fff;
 }
 
 .log-input-left {
@@ -5997,7 +5997,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 590px;
         background-size: 100%;
     }
@@ -6129,7 +6129,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 563px;
         background-size: 100%;
     }
@@ -6283,7 +6283,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 520px;
         background-size: 100%;
     }
@@ -7392,7 +7392,7 @@ p.creating {
     }
 
     .sign-in-form-top {
-        background: url(../images/3.jpg) no-repeat 0px -80px;
+        background: url(../easyadminLayout/images/3.jpg) no-repeat 0px -80px;
         min-height: 115px;
     }
 
@@ -7822,7 +7822,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 482px;
         background-size: 100%;
     }
@@ -8193,7 +8193,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 405px;
         background-size: 100%;
     }
@@ -8894,7 +8894,7 @@ p.creating {
     }
 
     .signin:after {
-        background: url(../images/6.png) no-repeat 0px 0px;
+        background: url(../easyadminLayout/images/6.png) no-repeat 0px 0px;
         width: 305px;
         background-size: 100%;
     }

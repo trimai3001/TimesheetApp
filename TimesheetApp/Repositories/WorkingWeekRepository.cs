@@ -59,5 +59,11 @@ namespace TimesheetApp.Repositories
             var toApproveCollection = database.GetCollection<WorkingWeek>(jObject.SelectToken("ApproveCollection").ToString());
             toApproveCollection.InsertOne(workingWeek);
         }
+
+        public List<WorkingWeek> LoadSubmitted(ObjectId employeeId, DateTime from)
+        {
+            var workingWeek = _workingWeek.Find(w => w.EmployeeId == employeeId && w.From == from).ToList();
+            return workingWeek;
+        }
     }
 }

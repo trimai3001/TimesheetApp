@@ -14,5 +14,6 @@ namespace TimesheetApp.Interfaces
         public void Create(WorkingWeek workingWeek);
         public void Delete(ObjectId id);
         public void SubmitToApprove(WorkingWeek workingWeek);
+        public List<WorkingWeek> LoadSubmitted(ObjectId employeeId, DateTime from);
     }
 }

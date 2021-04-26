@@ -15,109 +15,176 @@
 
 <div id="page-wrapper">
     <div class="graphs">
-        <h3 class="blank1">Timesheet Form</h3>
-        <div class="panel-body panel-body-inputin">
-            <div class="col-md-2">
+        <form asp-action="Submit" method="post" id="submitForm">
+            <h3 class="blank1">Timesheet Form</h3>
+            <div class="panel-body panel-body-inputin">
+                <div class="col-md-2">
 
-            </div>
-            <div class="col-md-1">
-
-            </div>
-            <div class="col-md-1">
-
-            </div>
-            @for (var i = 0; i < ViewBag.DayName.Count; i++)
-            {
-                <div class="col-md-1 text-center">
-                    <label>
-                        @ViewBag.DayName[i]
-                        <br />
-                        (@ViewBag.SimpleDate[i])
-                    </label>
                 </div>
-            }
-        </div>
-        <div class="panel-body panel-body-inputin">
-            @for (var i = 0; i < Model.WorkingWeeks.Count; i++)
-            {
-                <form asp-action="Submit" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-1">
 
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            @Html.DropDownListFor(list => list.WorkingWeeks[i].Project, new SelectList(ViewBag.Project, "Id", "Name"), "Select Project", new { @class = "form-select form-control1", @name = "Project" + @i })
-                        </div>
-                    </div>
+                </div>
+                <div class="col-md-1">
 
-                    <div class="form-group">
-                        <div class="col-md-1">
-                            @Html.DropDownListFor(list => list.WorkingWeeks[i].Activity, new SelectList(ViewBag.Activity, "Id", "Name"), "Select Activity", new { @class = "form-select form-control1", @name = "Activity" + @i })
-                        </div>
+                </div>
+                @for (var i = 0; i < ViewBag.DayName.Count; i++)
+                {
+                    <div class="col-md-1 text-center">
+                        <label>
+                            @ViewBag.DayName[i]
+                            <br />
+                            (@ViewBag.SimpleDate[i])
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-1">
-                            @Html.DropDownListFor(list => list.WorkingWeeks[i].BillingCategory, new SelectList(ViewBag.BillingCategory, "Id", "Name"), "Select Billing Category", new { @class = "form-select form-control1", @name = "BillingCategory" + @i })
-                        </div>
-                    </div>
-                    @for (var j = 0; j < Model.WorkingWeeks[i].WorkingDays.Count; j++)
+                }
+            </div>
+            <div class="panel-body panel-body-inputin">
+                @foreach (var week in Model.WorkingWeeks)
+                {
+                    if (ViewBag.WeekLock.Count == 0 || !ViewBag.WeekLock.Contains(week.Id))
                     {
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="@week.Id" value="@week.Id" />
+                        <div class="form-group"></div>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).Project, new SelectList(ViewBag.Project, "Id", "Name"), "Select Project", new { @class = "form-select form-control1", @name = "Project" })
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-1">
-                                @Html.TextBoxFor(t => t.WorkingWeeks[i].WorkingDays[j].WorkHour, new { @class = "text-center input-working-day form-control1", @type = "number" })
+                                @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).Activity, new SelectList(ViewBag.Activity, "Id", "Name"), "Select Activity", new { @class = "form-select form-control1", @name = "Activity" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                @Html.DropDownListFor(list => list.WorkingWeeks.Find(w => w.Id == week.Id).BillingCategory, new SelectList(ViewBag.BillingCategory, "Id", "Name"), "Select Billing Category", new { @class = "form-select form-control1", @name = "BillingCategory" })
+                            </div>
+                        </div>
+                        @foreach (var day in Model.WorkingWeeks.Find(w => w.Id == week.Id).WorkingDays)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-1">
+                                    @Html.TextBoxFor(t => t.WorkingWeeks.Find(w => w.Id == week.Id).WorkingDays.Find(d => d.Id == day.Id).WorkHour, new { @class = "text-center input-working-day form-control1", @type = "number" })
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                @using (Html.BeginForm("Delete", "Home"))
+                                {
+                                    <button class="btn btn-danger myBtn text-center" type="submit" value="Delete">
+                                        <span style="color: white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                    <input type="hidden" class="form-control" value="@week.Id" asp-for="@week.Id" />
+                                }
                             </div>
                         </div>
                     }
-                    <input class="btn btn-success hidden btnSubmit" type="submit" value="Submit" id="" />
-                </form>
-                <div class="form-group">
-                    <div class="col-md-1">
-                        <form asp-action="Delete">
-                            <button class="btn btn-danger myBtn text-center" type="submit" value="Delete">
-                                <span style="color: white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                    </svg>
-                                </span>
-                            </button>
-                            <input type="hidden" class="form-control" value="@Model.WorkingWeeks[i].Id" asp-for="@Model.WorkingWeeks[i].Id" />
-                        </form>
-                    </div>
-                </div>
-                test.Add(Model.WorkingWeeks[i]);
-            }
-        </div>
-
-        <hr />
-        <div class="panel-body panel-body-inputin">
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
-                @{
-                    if (TempData.Peek("Message") != null)
+                    else
                     {
-                        <span class="text-danger">@TempData.Peek("Message")</span>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="@week.Id" value="@week.Id" />
+                        <div class="form-group"></div>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <input class="form-control1" disabled asp-for="@week.Project" value="@week.Project.Name"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <input class="form-control1" disabled asp-for="@week.Activity" value="@week.Activity.Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                <input class="form-control1" disabled asp-for="@week.BillingCategory" value="@week.BillingCategory.Name" />
+                            </div>
+                        </div>
+                        @foreach (var day in Model.WorkingWeeks.Find(w => w.Id == week.Id).WorkingDays)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-1">
+                                    <input class="text-center form-control1" disabled asp-for="@day" value="@day.WorkHour" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            <div class="col-md-1">
+                                @using (Html.BeginForm("Delete", "Home"))
+                                {
+                                    <button class="btn btn-danger myBtn text-center" type="submit" value="Delete">
+                                        <span style="color: white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                    <input type="hidden" class="form-control" value="@week.Id" asp-for="@week.Id" />
+                                }
+                            </div>
+                        </div>
                     }
                 }
+
             </div>
-        </div>
-        <div class="panel-body panel-body-inputin">
-            <div class="form-group">
-                <div class="col-md-2"></div>
-                <div class="col-md-1">
-                    <form asp-action="AddRow">
-                        <input class="btn btn-warning" type="submit" value="Add Row" />
-                    </form>
+
+            <hr />
+            <div class="panel-body panel-body-inputin">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    @{
+                        if (TempData.Peek("Message") != null)
+                        {
+                            <span class="text-danger">@TempData.Peek("Message")</span>
+                        }
+                    }
                 </div>
-                <div class="col-md-1">
-                    <form asp-action="Submit" method="post">
+            </div>
+            <div class="panel-body panel-body-inputin">
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-1">
+                        @using (Html.BeginForm("AddRow", "Home"))
+                        {
+                            <input class="btn btn-warning" type="submit" value="Add Row" />
+                        }
+                    </div>
+                    <div class="col-md-1">
                         <input class="btn btn-success" type="submit" value="Submit" id="btnClick" />
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
+<script>
+    $(document).ready(function () {
+        $("#btnClick").click(function (e) {
+            //Serialize the form datas.   
+            var valdata = $("#submitForm").serialize();
+
+            $.ajax({
+                url: "/Home/Submit",
+                type: "POST",
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: valdata
+            });
+        });
+    }); 
+</script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

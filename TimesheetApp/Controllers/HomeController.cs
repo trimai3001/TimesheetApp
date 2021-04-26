@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using System;
@@ -28,6 +29,9 @@ namespace TimesheetApp.Controllers
 
         [TempData]
         public string Message { get; set; }
+
+        [TempData]
+        public string ElementAttribute { get; set; }
 
         public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository, IEmployeeRepository employeeRepository)
         {
@@ -69,32 +73,84 @@ namespace TimesheetApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Submit(IFormCollection form, List<WorkingWeek> WorkingWeeksss, WorkingWeekList list)
+        public IActionResult Submit(IFormCollection form)
         {
+            var weeks = new List<WorkingWeek>();
+
+            // Load data
             _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
             var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
-            
-            if (workingWeeks.Find(s => s.Project.Name == null) != null)
+            var projects = _project.LoadAll().ToList();
+            var activities = _activity.LoadAll().ToList();
+            var billings = _billingCategory.LoadAll().ToList();
+
+            // Get all id of weeks
+            var weekIds = form["week.Id"].ToString().Split(",").ToList();
+            var weekProjects = form["Project"].ToString().Split(",").ToList();
+            var weekActivities = form["Activity"].ToString().Split(",").ToList();
+            var weekBillingCategory = form["BillingCategory"].ToString().Split(",").ToList();
+            var weekWorkHour = form["WorkHour"].ToString().Split(",").ToList();
+
+            // Check total of Work hours is not less than 40 hour/week
+            var total = 0;
+            foreach (var hour in weekWorkHour)
             {
-                Message = "Please select 'Project' and submit again.";
-                
-                //return RedirectToAction(nameof(Manage));
+                total += int.Parse(hour);
             }
-            else if (workingWeeks.Find(s => s.BillingCategory.Name == null) != null)
+
+            weekIds.RemoveAt(0);
+
+            for(var i = 0; i < weekIds.Count; i++)
             {
-                Message = "Please select 'Billing Category' and submit again.";
-                //return RedirectToAction(nameof(Manage));
-            }
-            else if (workingWeeks.Find(s => s.Activity.Name == null) != null)
-            {
-                Message = "Please select 'Billing Category' and submit again.";
-            }
-            else
-            {
-                foreach (var week in workingWeeks)
+                var week = workingWeeks.Find(w => w.Id == ObjectId.Parse(weekIds[i]));
+
+                // Check Project field is selected
+                if(projects.Find(p => p.Id == ObjectId.Parse(weekProjects[i])) == null)
                 {
-                    _workingWeekRepository.SubmitToApprove(week);
+                    Message = "Please select 'Project' and submit again.";
+                    return RedirectToAction(nameof(Manage));
                 }
+                else
+                {
+                    week.Project = projects.Find(p => p.Id == ObjectId.Parse(weekProjects[i]));
+                }
+
+                // Check Activities field is selected
+                if (activities.Find(a => a.Id == ObjectId.Parse(weekActivities[i])) == null)
+                {
+                    Message = "Please select 'Activity' and submit again.";
+                    return RedirectToAction(nameof(Manage));
+                }
+                else
+                {
+                    week.Activity = activities.Find(a => a.Id == ObjectId.Parse(weekActivities[i]));
+                }
+
+                // Check Billing Categories field is selected
+                if (billings.Find(b => b.Id == ObjectId.Parse(weekBillingCategory[i])) == null)
+                {
+                    Message = "Please select 'Billing Category' and submit again.";
+                    return RedirectToAction(nameof(Manage));
+                }
+                else
+                {
+                    week.BillingCategory = billings.Find(b => b.Id == ObjectId.Parse(weekBillingCategory[i]));
+                }
+
+                if (total < 40)
+                {
+                    Message = "Your hours you work are less than 40hrs. Please submit again.";
+                    return RedirectToAction(nameof(Manage));
+                }
+
+                weeks.Add(week);
+            }
+
+            foreach (var week in weeks)
+            {
+                _workingWeekRepository.Delete(week.Id);
+                _workingWeekRepository.Create(week);
+                _workingWeekRepository.SubmitToApprove(week);
             }
 
             return RedirectToAction(nameof(Manage));
@@ -110,6 +166,10 @@ namespace TimesheetApp.Controllers
             {
                 WorkingWeeks = workingWeeks.OrderBy(o => o.Order).ToList()
             };
+
+            var lockId = new List<ObjectId>();
+            _workingWeekRepository.LoadSubmitted(_employeeId, workingWeeks[0].From).ForEach(w => lockId.Add(w.Id));
+            ViewBag.WeekLock = lockId;
 
             ViewBag.Permission = _employeeRepository.GetByObjectId(_employeeId).Role.Name;
 
