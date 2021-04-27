@@ -7,9 +7,8 @@ namespace TimeSheetApp.Models
 {
     public class Activity
     {
-        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        [BsonElement("_id")]
+        public ObjectId Id { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }

@@ -53,7 +53,15 @@ namespace TimesheetApp.Helper
         public static DateTime GetMonday(DateTime time)
         {
             if (time.DayOfWeek != DayOfWeek.Monday)
-                return time.Subtract(new TimeSpan((int)time.DayOfWeek - 1, 0, 0, 0));
+            {
+                var monday = time.Subtract(new TimeSpan((int)time.DayOfWeek - 1, 0, 0, 0));
+                if (monday.Day > time.Day)
+                {
+                    return time.Subtract(new TimeSpan((int)time.DayOfWeek + 6, 0, 0, 0));
+                }
+
+                return monday;
+            }
 
             return time;
         }

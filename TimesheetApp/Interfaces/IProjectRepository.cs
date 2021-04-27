@@ -12,5 +12,6 @@ namespace TimesheetApp.Interfaces
         public IEnumerable<Project> LoadAll();
         public void Create(Project project);
         public void Delete(ObjectId id);
+        public Project FindOne(ObjectId id);
     }
 }

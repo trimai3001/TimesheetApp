@@ -26,6 +26,7 @@ namespace TimesheetApp.Controllers
         {
             ViewBag.AllProject = _projectRepository.LoadAll();
             ViewBag.Manager = _employeeRepository.GetAllByRole("Manager");
+            ViewBag.Project = new Project();
             return View(_project);
         }
 
@@ -54,7 +55,7 @@ namespace TimesheetApp.Controllers
         {
             try
             {
-                ObjectId id = ObjectId.Parse(form["id"].ToString());
+                ObjectId id = ObjectId.Parse(form["Id"].ToString());
                 _projectRepository.Delete(id);
             }
             catch (Exception e)

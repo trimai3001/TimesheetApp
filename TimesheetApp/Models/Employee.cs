@@ -27,6 +27,7 @@ namespace TimeSheetApp.Models
 
         [BsonElement("role")]
         [Required]
+
         public Role Role { get; set; }
         public Employee()
         {

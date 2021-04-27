@@ -5,5 +5,9 @@
   "workingDayCollection": "Working Day",
   "activityCollection": "Activity",
   "employeeCollection": "Employee",
-  "roleCollection": "Role"
+  "roleCollection": "Role",
+  "userCollection": "User",
+  "workingWeekCollection": "Working Week",
+  "ApproveCollection": "Approve Timesheet",
+  "ApprovedCollection": "Approved Timesheet"
 }

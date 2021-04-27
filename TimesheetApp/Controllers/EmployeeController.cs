@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimesheetApp.ViewModels;
 using TimeSheetApp.Models;
@@ -28,8 +29,10 @@ namespace TimesheetApp.Controllers
             {
                 EmployeeId = employeeIdGenerate
             };
-        }
 
+            
+        }
+        
         // POST: EmployeeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -46,9 +49,15 @@ namespace TimesheetApp.Controllers
             catch
             {
             }
-            return View(nameof(Manage));
+            return RedirectToAction(nameof(Manage));
         }
 
+        public ActionResult Delete()
+        {
+            ViewBag.AllEmployee = _employeeRepository.LoadAll();
+            ViewBag.Roles = _roleRepository.LoadAll();
+            return View();
+        }
         // POST: EmployeeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -56,17 +65,18 @@ namespace TimesheetApp.Controllers
         {
             try
             {
-                ObjectId id = ObjectId.Parse(form["EmployeeId"].ToString());
+                ObjectId id = ObjectId.Parse(form["Id"].ToString());
                 _employeeRepository.DeleteEmployee(id);
             }
             catch (Exception e)
             {
             }
-            return View(nameof(Manage));
+            return RedirectToAction(nameof(Manage));
         }
 
         public ActionResult Manage()
         {
+            ViewBag.Test = HttpContext.Session.Get<Employee>("Employee");
             ViewBag.Roles = _roleRepository.LoadAll();
             ViewBag.AllEmployee = _employeeRepository.LoadAll();            
             return View(employee);

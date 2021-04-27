@@ -1,80 +1,124 @@
 ﻿@model TimeSheetApp.Models.Project
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
+}
 
-<h4>Project</h4>
 <hr />
-<section class="py-5" style="width:100%;height:100%; border-radius: 0px" id="contact">
-    <div class="pt-3" style="width:80%; margin-left:10%; margin-right: 10%">
-        <div class="middle-heading1 text-center mb-5">
-            <h3>Project</h3>
-        </div>
-        <div class="row agileinfo_mail_grids">
-            <div class="col-md-5 agileinfo_mail_grid_right">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
+
+<div id="page-wrapper">
+    <div class="graphs">
+        <h3 class="blank1">Project Form</h3>
+        <div class="panel-body panel-body-inputin">
+            <form class="form-horizontal" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Name" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        <input asp-for="Name" type="text" class="form-control1">
+                    </div>
+                    <div class="col-md-4">
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Manager" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.Manager, new SelectList(ViewBag.Manager, "Id", "Name"), "Select Manager", new { @class = "form-select", @name = "manager" })
+                </div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Manager" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.Manager, new SelectList(ViewBag.Manager, "Id", "Name"), "Select Manager", new { @class = "form-select form-control1", @name = "manager" })
+                    </div>
+                    <div class="col-md-4">
                         <span asp-validation-for="Manager" class="text-danger"></span>
                     </div>
-
-                    <div class="submit-buttons">
-                        <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" id="create" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-1 agileinfo_mail_grid_right">
-            </div>
-            <div class="col-md-6 mt-lg-0 mt-4 py-lg-3 py-4 px-0 contact-info">
-                <div class="contact-info1">
-                    <table class="table table-hover" id="table" data-toggle="table" data-height="300">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col" class="col-2" data-field="Name" data-sortable="true">Name</th>
-                                <th scope="col" class="col-2" data-field="Employee.Name" data-sortable="true">Manager</th>
-                                <th scope="col" class="col-1"</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var project in ViewBag.AllProject)
-                            {
-                                <tr>
-                                    <td style="text-align:center"><p class="text-center">@project.Name</p></td>
-                                    <td style="text-align:center"><p>@project.Manager.Name</p></td>
-                                    <td style="text-align:center">
-                                        <form asp-action="Delete">
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-link" type="submit" value="Delete">
-                                                    <span style="color: white">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                                        </svg>
-                                                    </span>
-                                                </button>
-                                                <input type="hidden" asp-for="Id" class="form-control" value="@project.Id" />
-                                            </div>
-                                        </form>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
                 </div>
+                <div class="form-group">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <input type="submit" value="Submit" class="btn btn-success" id="create" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <hr />
+        <h3 class="blank1">All Project</h3>
+        <div class="col-md-4">
+            <input id="myInput" type="text" placeholder="Search.." class="form-control1">
+        </div>
+
+        <br><br>
+        <div class="panel-body1">
+            <div class="tableFixHead" data-example-id="contextual-table">
+                <table class="table table-striped" id="table" data-toggle="table" data-search="true" data-search-align="left">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th data-field="Name" data-sortable="true">Name</th>
+                            <th data-field="Employee.Name" data-sortable="true">Manager</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in ViewBag.AllProject)
+                        {
+                            <tr>
+                                <td></td>
+                                <td style="vertical-align:middle">@project.Name</td>
+                                <td style="vertical-align:middle">@project.Manager.Name</td>
+                                <td style="vertical-align:middle">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-link myBtn" type="button" value="Delete" data-toggle="modal" data-id="@project.Id" data-content="@project.Name" id=@project.Id>
+                                                <span style="color: red">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="delModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                    <div class="modal-header" style="background-color:tomato">
+                        <h4 class="modal-title" style="background-color:tomato">Delete Project</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="content" style="font-size: 18px"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2">
+                            <form asp-action="Delete">
+                                <button type="submit" class="btn btn-success" value="Delete" id="accept">Accept</button>
+                                <input type="hidden" asp-for="Id" class="form-control" value="" id="del" />
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-default" value="Delete" data-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+    <script>IDBCursor
         function customSort(sortName, sortOrder, data) {
             var order = sortOrder === 'desc' ? -1 : 1
             data.sort(function (a, b) {
@@ -89,5 +133,36 @@
                 return 0
             })
         }
+
+        // Fix table head
+        function tableFixHead(e) {
+            const el = e.target,
+                sT = el.scrollTop;
+            el.querySelectorAll("thead th").forEach(th =>
+                th.style.transform = `translateY(${sT}px)`
+            );
+        }
+        document.querySelectorAll(".tableFixHead").forEach(el =>
+            el.addEventListener("scroll", tableFixHead)
+        );
+
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#table tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        $(document).on("click", ".myBtn", function () {
+            var myId = $(this).data('id');
+            var myName = $(this).data('content');
+            console.log(myId);
+            $("#delModal").modal();
+            $("#del").val(myId);
+            $("#content").text('Are you sure to delete ' + myName + ' project?');
+        });
     </script>
 }
+

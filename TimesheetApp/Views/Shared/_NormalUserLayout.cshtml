@@ -42,7 +42,8 @@
         <!--logo and iconic logo start-->
         <div class="logo">
             <h1>
-                <a href="index.html">Timesheet 
+                <a href="index.html">
+                    Timesheet
                     <span>Admin</span>
                 </a>
             </h1>
@@ -57,27 +58,6 @@
             <!--sidebar nav start-->
             <ul class="nav nav-pills nav-stacked custom-nav">
                 <li><a asp-action="Manage" asp-controller="Home"><i class="far fa-clock"></i><span>Timesheet</span></a></li>
-                <li class="menu-list">
-                    <a href="#">
-                        <i class="far fa-edit"></i>
-                        <span>Action</span>
-                    </a>
-                    <ul class="sub-menu-list">
-                        <li><a asp-action="Manage" asp-controller="WaitForApprove"><i class="far fa-edit"></i> <span>Wait For Approve</span></a> </li>
-                        <li><a asp-action="Manage" asp-controller="Approved"><i class="far fa-clipboard"></i> <span>Approved</span></a></li>
-                    </ul>
-                </li>
-                <li class="menu-list">
-                    <a href="#">
-                        <i class="lnr lnr-cog"></i>
-                        <span>Manage</span>
-                    </a>
-                    <ul class="sub-menu-list">
-                        <li><a asp-action="Manage" asp-controller="Employee"><i class="far fa-user"></i> <span>Employee</span></a> </li>
-                        <li><a asp-action="Manage" asp-controller="Project"><i class="far fa-folder-open"></i> <span>Project</span></a></li>
-                        <li><a asp-action="Manage" asp-controller="Project"><i class="far fa-id-card"></i> <span>Account</span></a></li>
-                    </ul>
-                </li>
             </ul>
             <!--sidebar nav end-->
         </div>
@@ -100,7 +80,7 @@
                             <li class="dropdown profile_details_drop">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <div class="profile_img">
-                                        <span style="background: url(../easyadminLayout/images/1.jpg) no-repeat center"> </span>
+                                        <span style="background: url(~/easyadminLayout/images/1.jpg) no-repeat center"> </span>
                                         <div class="user-name">
                                             <p>Michael<span>Administrator</span></p>
                                         </div>
@@ -112,7 +92,7 @@
                                 <ul class="dropdown-menu drp-mnu">
                                     <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
                                     <li> <a href="#"><i class="fa fa-user"></i>Profile</a> </li>
-                                    <li> <a asp-action="Login" asp-controller="Login"><i class="fa fa-sign-out"></i> Logout</a> </li>
+                                    <li> <a href="sign-up.html"><i class="fa fa-sign-out"></i> Logout</a> </li>
                                 </ul>
                             </li>
                             <div class="clearfix"> </div>
