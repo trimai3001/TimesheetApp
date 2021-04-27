@@ -1,18 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimesheetApp.Models;
-using TimesheetApp.ViewModels;
-using TimeSheetApp.Models;
 
 namespace TimesheetApp.Controllers
 {
@@ -29,9 +23,6 @@ namespace TimesheetApp.Controllers
 
         [TempData]
         public string Message { get; set; }
-
-        [TempData]
-        public string ElementAttribute { get; set; }
 
         public HomeController(IBillingCategoryRepository billingCategoryRepository, IProjectRepository projectRepository, IActivityRepository activityRepository, IWorkingWeekRepository workingWeekRepository, IEmployeeRepository employeeRepository)
         {
@@ -75,6 +66,7 @@ namespace TimesheetApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Submit(IFormCollection form)
         {
+
             var weeks = new List<WorkingWeek>();
 
             // Load data
@@ -90,6 +82,23 @@ namespace TimesheetApp.Controllers
             var weekActivities = form["Activity"].ToString().Split(",").ToList();
             var weekBillingCategory = form["BillingCategory"].ToString().Split(",").ToList();
             var weekWorkHour = form["WorkHour"].ToString().Split(",").ToList();
+            var monday = Utilities.GetMonday(DateTime.Today);
+
+            weekIds.RemoveAt(0);
+
+            for(var i = weekIds.Count - 1; i >= 0; i--)
+            {
+                if (_workingWeekRepository.LoadSubmitted(ObjectId.Parse(weekIds[i])) != null)
+                {
+                    weekIds.RemoveAt(i);
+                }
+            }
+
+            if(weekIds.Count == 0)
+            {
+                Message = "Your timesheet already submitted";
+                return RedirectToAction(nameof(Manage));
+            }
 
             // Check total of Work hours is not less than 40 hour/week
             var total = 0;
@@ -98,14 +107,14 @@ namespace TimesheetApp.Controllers
                 total += int.Parse(hour);
             }
 
-            weekIds.RemoveAt(0);
+            
 
             for(var i = 0; i < weekIds.Count; i++)
             {
                 var week = workingWeeks.Find(w => w.Id == ObjectId.Parse(weekIds[i]));
 
                 // Check Project field is selected
-                if(projects.Find(p => p.Id == ObjectId.Parse(weekProjects[i])) == null)
+                if(weekProjects[i] == "" || projects.Find(p => p.Id == ObjectId.Parse(weekProjects[i])) == null)
                 {
                     Message = "Please select 'Project' and submit again.";
                     return RedirectToAction(nameof(Manage));
@@ -116,7 +125,7 @@ namespace TimesheetApp.Controllers
                 }
 
                 // Check Activities field is selected
-                if (activities.Find(a => a.Id == ObjectId.Parse(weekActivities[i])) == null)
+                if (weekActivities[i] == "" || activities.Find(a => a.Id == ObjectId.Parse(weekActivities[i])) == null)
                 {
                     Message = "Please select 'Activity' and submit again.";
                     return RedirectToAction(nameof(Manage));
@@ -127,7 +136,7 @@ namespace TimesheetApp.Controllers
                 }
 
                 // Check Billing Categories field is selected
-                if (billings.Find(b => b.Id == ObjectId.Parse(weekBillingCategory[i])) == null)
+                if (weekBillingCategory[i] == "" || billings.Find(b => b.Id == ObjectId.Parse(weekBillingCategory[i])) == null)
                 {
                     Message = "Please select 'Billing Category' and submit again.";
                     return RedirectToAction(nameof(Manage));
@@ -143,14 +152,42 @@ namespace TimesheetApp.Controllers
                     return RedirectToAction(nameof(Manage));
                 }
 
+                
+                var days = week.WorkingDays;
+                var index = 0;
+                foreach (var day in days)
+                {
+                    if(index == 7)
+                    {
+                        break;
+                    }
+                    day.WorkHour = int.Parse(weekWorkHour[index + (7 * i)]);
+                    day.WorkDate = monday.AddDays(index);
+                    index++;
+                }
+                week.WorkingDays = days;
+                week.From = monday;
+                week.To = monday.AddDays(6);
+                week.Order = i;
                 weeks.Add(week);
             }
 
-            foreach (var week in weeks)
+            // Check submitted working week
+            var locks = _workingWeekRepository.LoadSubmitted(_employeeId, monday);
+            locks.AddRange(_workingWeekRepository.LoadApproved(_employeeId, monday));
+
+            foreach(var week in weeks)
             {
-                _workingWeekRepository.Delete(week.Id);
-                _workingWeekRepository.Create(week);
-                _workingWeekRepository.SubmitToApprove(week);
+                if(locks.Count == 0 || !locks.Contains(week))
+                {
+                    _workingWeekRepository.Delete(week.Id);
+                    _workingWeekRepository.Create(week);
+                    _workingWeekRepository.SubmitToApprove(week);
+                }
+                else if(locks.Contains(week))
+                {
+                    continue;
+                }
             }
 
             return RedirectToAction(nameof(Manage));
@@ -158,26 +195,39 @@ namespace TimesheetApp.Controllers
 
         public IActionResult Manage()
         {
+            // Init
             _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
-
-            var workingWeeks = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
-
-            _workingWeeks = new WorkingWeekList
-            {
-                WorkingWeeks = workingWeeks.OrderBy(o => o.Order).ToList()
-            };
-
-            var lockId = new List<ObjectId>();
-            _workingWeekRepository.LoadSubmitted(_employeeId, workingWeeks[0].From).ForEach(w => lockId.Add(w.Id));
-            ViewBag.WeekLock = lockId;
-
             ViewBag.Permission = _employeeRepository.GetByObjectId(_employeeId).Role.Name;
-
             ViewBag.BillingCategory = _billingCategory.LoadAll();
             ViewBag.Project = _project.LoadAll();
             ViewBag.Activity = _activity.LoadAll();
             ViewBag.DayName = Utilities.GetDaysName();
             ViewBag.SimpleDate = Utilities.GetSimpleDate(Utilities.GetDaysOfCurrentWeek());
+            var monday = Utilities.GetMonday(DateTime.Today);
+
+            // Load from submitted and approved
+            var workingWeeks = _workingWeekRepository.LoadSubmitted(_employeeId, monday);
+            workingWeeks.AddRange(_workingWeekRepository.LoadApproved(_employeeId, monday));
+
+            ViewBag.WeekLock = workingWeeks.ToList();
+
+            var ids = workingWeeks.Select(w => w.Id);
+
+            // Load from db
+            var workingWeeksDB = _workingWeekRepository.LoadWorkingWeekOfCurrentByEmployeeId(_employeeId);
+            foreach(var workWeek in workingWeeksDB)
+            {
+                if(!ids.Contains(workWeek.Id))
+                {
+                    workingWeeks.Add(workWeek);
+                }
+            }
+
+            // Load Model to View
+            _workingWeeks = new WorkingWeekList
+            {
+                WorkingWeeks = workingWeeks
+            };
 
             return View(_workingWeeks);
         }

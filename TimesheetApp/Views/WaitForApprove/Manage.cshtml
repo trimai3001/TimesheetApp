@@ -1,0 +1,111 @@
+﻿@model TimesheetApp.Models.WorkingWeekList
+
+@{
+    ViewData["Title"] = "Manage";
+
+    if (ViewBag.Permission != "Manager")
+    {
+        Layout = "~/Views/Shared/_NormalUserLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
+    }
+}
+
+<h2>Wait for approve</h2>
+<hr />
+
+<div id="page-wrapper">
+    <div class="graphs">
+        @if (Model.WorkingWeeks.Count != 0)
+        {
+            @if (ViewData["Employees"] != null)
+            {
+                @foreach (var employee in ViewBag.Employees)
+                {
+                    var weeks = Model.WorkingWeeks.FindAll(w => w.EmployeeId == employee.Id).OrderBy(o => o.Order);
+
+                    var from = weeks.ToList()[0].From.Day + "/" + weeks.ToList()[0].From.Month + "/" + weeks.ToList()[0].From.Year;
+                    var to = weeks.ToList()[0].To.Day + "/" + weeks.ToList()[0].To.Month + "/" + weeks.ToList()[0].To.Year;
+
+                    var objectsId = "";
+                    weeks.Select(w => w.Id).ToList().ForEach(id => objectsId += (id.ToString() + ","));
+
+
+                    <div class="panel-body1">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <span>Name: @employee.Name - Id: @employee.EmployeeId</span>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-2">
+                                <span>From: @from - To: @to </span>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <table class="table table-striped" id="table" data-toggle="table" data-search="true" data-search-align="left">
+                                <thead>
+                                    <tr>
+                                        <th data-field="Project" data-sortable="true">Project</th>
+                                        <th data-field="Billing Category" data-sortable="true">Billing Category</th>
+                                        <th data-field="Activity" data-sortable="true">Activity</th>
+                                        <th data-field="Monday" data-sortable="true">Monday</th>
+                                        <th data-field="Tuesday" data-sortable="true">Tuesday</th>
+                                        <th data-field="Wednesday" data-sortable="true">Wednesday</th>
+                                        <th data-field="Thursday" data-sortable="true">Thursday</th>
+                                        <th data-field="Friday" data-sortable="true">Friday</th>
+                                        <th data-field="Saturday" data-sortable="true">Saturday</th>
+                                        <th data-field="Sunday" data-sortable="true">Sunday</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var week in weeks)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td style="vertical-align:middle">@week.Project.Name</td>
+                                            <td style="vertical-align:middle">@week.BillingCategory.Name</td>
+                                            <td style="vertical-align:middle">@week.Activity</td>
+                                            @foreach (var day in week.WorkingDays)
+                                            {
+                                                <td style="vertical-align:middle">@day.WorkHour</td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                }
+                            </table>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-7"></div>
+                            <div class="col-md-1">
+                                <form asp-action="Approve">
+                                    <input type="submit" value="Approve" class="btn btn-success" />
+                                    <input type="hidden" value="@objectsId" asp-for="@objectsId"/>
+                                </form>
+                            </div>
+                            <div class="col-md-1">
+                                <form asp-action="Reject">
+                                    <input type="submit" value="Reject" class="btn btn-warning" style="background-color:red; border-color:red" />
+                                    <input type="hidden" value="@objectsId" asp-for="@objectsId"/>
+                                </form>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

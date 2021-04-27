@@ -15,5 +15,11 @@ namespace TimesheetApp.Interfaces
         public void Delete(ObjectId id);
         public void SubmitToApprove(WorkingWeek workingWeek);
         public List<WorkingWeek> LoadSubmitted(ObjectId employeeId, DateTime from);
+        public WorkingWeek LoadSubmitted(ObjectId id);
+        public List<WorkingWeek> LoadSubmittedByManager(ObjectId managerId);
+        public List<WorkingWeek> LoadApprovedByManager(ObjectId managerId);
+        public void Approve(ObjectId id);
+        public void DeleteSubmitted(ObjectId id);
+        public List<WorkingWeek> LoadApproved(ObjectId employeeId, DateTime from);
     }
 }

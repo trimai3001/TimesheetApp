@@ -41,7 +41,7 @@
             <div class="panel-body panel-body-inputin">
                 @foreach (var week in Model.WorkingWeeks)
                 {
-                    if (ViewBag.WeekLock.Count == 0 || !ViewBag.WeekLock.Contains(week.Id))
+                    if (ViewBag.WeekLock.Count == 0 || !ViewBag.WeekLock.Contains(week))
                     {
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="@week.Id" value="@week.Id" />
@@ -141,14 +141,11 @@
 
             <hr />
             <div class="panel-body panel-body-inputin">
-                <div class="col-md-1"></div>
-                <div class="col-md-5">
-                    @{
-                        if (TempData.Peek("Message") != null)
-                        {
-                            <span class="text-danger">@TempData.Peek("Message")</span>
-                        }
-                    }
+                <div class="form-group">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                    </div>
                 </div>
             </div>
             <div class="panel-body panel-body-inputin">
