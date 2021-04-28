@@ -30,7 +30,7 @@ namespace TimesheetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(User user)
         {
-            var member = _user.ToList().Find(u => u.Username.ToString().ToLower() == user.Username.ToLower() && u.Password == user.Password);
+            var member = _user.ToList().Find(u => u.Username.ToString().ToLower() == user.Username.ToLower() && u.Password == Utilities.GetMD5(user.Password));
 
             if(member == null)
             {

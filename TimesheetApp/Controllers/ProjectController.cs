@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TimesheetApp.Helper;
 using TimesheetApp.Interfaces;
 using TimeSheetApp.Models;
 
@@ -15,6 +16,7 @@ namespace TimesheetApp.Controllers
         private readonly IProjectRepository _projectRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private Project _project;
+        private ObjectId _employeeId;
         public ProjectController(IProjectRepository projectRepositor, IEmployeeRepository employeeRepository)
         {
             _projectRepository = projectRepositor;
@@ -24,6 +26,9 @@ namespace TimesheetApp.Controllers
 
         public ActionResult Manage()
         {
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+            ViewBag.Permission = _employeeRepository.GetByObjectId(_employeeId).Role.Name;
+
             ViewBag.AllProject = _projectRepository.LoadAll();
             ViewBag.Manager = _employeeRepository.GetAllByRole("Manager");
             ViewBag.Project = new Project();

@@ -1,0 +1,58 @@
+﻿@model TimeSheetApp.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
+}
+
+<hr />
+
+<div id="page-wrapper">
+    <div class="graphs">
+        <h3 class="blank1">Account Form</h3>
+        <div class="panel-body panel-body-inputin">
+            <form class="form-horizontal" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Name" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.Name, new SelectList(ViewBag.Employees, "Id", "Name"), "Select Employee", new { @class = "form-select form-control1", @name = "Employee" })
+                    </div>
+                    <div class="col-md-4">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="focusedinput" asp-for="Email" class="col-md-3 control-label"></label>
+                    <div class="col-md-4">
+                        <input class="form-control1" disabled value="" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        @{
+                            if (@TempData.Peek("Message") != null)
+                            {
+                                <span style="color:lawngreen">@TempData.Peek("Message")</span>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <input type="submit" value="Submit" class="btn btn-success" id="create" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        
+    </script>
+}

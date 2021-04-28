@@ -17,7 +17,7 @@ namespace TimesheetApp.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IRoleRepository _roleRepository;
         private Employee employee;
-
+        private ObjectId _employeeId;
         private string employeeIdGenerate;
         public EmployeeController(IEmployeeRepository employeeRepository, IRoleRepository roleRepository)
         {
@@ -76,6 +76,10 @@ namespace TimesheetApp.Controllers
 
         public ActionResult Manage()
         {
+            // Init
+            _employeeId = ObjectId.Parse(HttpContext.Session.Get<string>("EmployeeId"));
+            ViewBag.Permission = _employeeRepository.GetByObjectId(_employeeId).Role.Name;
+
             ViewBag.Test = HttpContext.Session.Get<Employee>("Employee");
             ViewBag.Roles = _roleRepository.LoadAll();
             ViewBag.AllEmployee = _employeeRepository.LoadAll();            

@@ -1,10 +1,17 @@
 ﻿@model TimeSheetApp.Models.Employee
-@using Microsoft.AspNetCore.Http
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
-}
 
+@{
+    ViewData["Title"] = "Manage";
+
+    if (ViewBag.Permission != "Manager")
+    {
+        Layout = "~/Views/Shared/_NormalUserLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_EasyAdminLayout.cshtml";
+    }
+}
 <hr />
 
 <div id="page-wrapper">
